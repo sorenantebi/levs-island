@@ -10,6 +10,11 @@ for (let i = 0; i < collisions.length; i+=50){
 
 }
 
+/* const oceanMap = []
+for (let i = 0; i < land.length; i+=50){
+    oceanMap.push(land.slice(i, i+50))
+} */
+
 class Boundary {
 
     constructor({position, width, height}){
@@ -23,12 +28,50 @@ class Boundary {
         c.fillRect(this.position.x, this.position.y, this.width, this.height)
     }
 }
+/* const waves = new Image()
+waves.src = './img/tile.png'
 
+class oceanTile {
+    constructor({position, image, frames = {max:1}}){
+        this.position = position
+        this.image = image
+        /* this.frames = {...frames, val: 0, elapsed: 0}
+
+        this.image.onload = () =>{
+            this.width = this.image.width / this.frames.max
+            this.height = this.image.height
+        } 
+        
+    }
+
+    draw(){
+         c.drawImage(this.image,
+            this.frames.val * this.width,
+            0,
+            this.image.width/ this.frames.max,
+            this.image.height,
+            this.position.x,
+            this.position.y,
+            this.image.width / this.frames.max,
+            this.image.height) 
+    }
+} */
 const boundaries = []
+//const oceans = []
 const offset = {
     x: -450,
     y: -600
 }
+
+/* oceanMap.forEach((row, i) => {
+    row.forEach((symbol, j) => {
+        if (symbol == 0){
+            oceans.push(new oceanTile({position:{
+                x: j * 48 + offset.x,
+                y: i * 48 + offset.y
+            }, image: waves, frames: {max:1}}))
+        }
+    })}) */
 
 collisionsMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
@@ -67,6 +110,7 @@ class Pokemon {
 }
 const img = new Image()
 img.src = './img/pokemon.png'
+
 const foreGround = new Image()
 foreGround.src = './img/foreground.png'
 
@@ -156,7 +200,11 @@ function animate(){
     boundaries.forEach(boundary => {
         boundary.draw()
     })
-    oceans
+
+    
+    /* oceans.forEach(ocean => {
+        ocean.draw()
+    }) */
     poke.draw()
     player.draw()
   
