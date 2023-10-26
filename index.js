@@ -10,10 +10,10 @@ for (let i = 0; i < collisions.length; i+=50){
 
 }
 
-/* const oceanMap = []
+const oceanMap = []
 for (let i = 0; i < land.length; i+=50){
     oceanMap.push(land.slice(i, i+50))
-} */
+} 
 
 class Boundary {
 
@@ -28,50 +28,55 @@ class Boundary {
         c.fillRect(this.position.x, this.position.y, this.width, this.height)
     }
 }
-/* const waves = new Image()
+const waves = new Image()
 waves.src = './img/tile.png'
 
 class oceanTile {
     constructor({position, image, frames = {max:1}}){
         this.position = position
         this.image = image
-        /* this.frames = {...frames, val: 0, elapsed: 0}
-
-        this.image.onload = () =>{
-            this.width = this.image.width / this.frames.max
-            this.height = this.image.height
-        } 
+        this.frames = {...frames, val: 0, elapsed: 0}
         
     }
 
     draw(){
-         c.drawImage(this.image,
-            this.frames.val * this.width,
+        //c.drawImage(this.image, this.position.x, this.position.y, this.image.width/this.frames.max, this.image.height)
+
+        c.drawImage(this.image,
+            this.frames.val * (this.image.width/this.frames.max),
             0,
             this.image.width/ this.frames.max,
             this.image.height,
             this.position.x,
             this.position.y,
             this.image.width / this.frames.max,
-            this.image.height) 
+            this.image.height)
+        
+        if (this.frames.max >1) {
+            this.frames.elapsed ++
+        }
+        if (this.frames.elapsed % 15 == 0){
+            if (this.frames.val < this.frames.max - 1) this.frames.val++
+            else this.frames.val = 0
+        } 
     }
-} */
+} 
 const boundaries = []
-//const oceans = []
+const oceans = []
 const offset = {
     x: -450,
     y: -600
 }
 
-/* oceanMap.forEach((row, i) => {
+oceanMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
         if (symbol == 0){
             oceans.push(new oceanTile({position:{
                 x: j * 48 + offset.x,
                 y: i * 48 + offset.y
-            }, image: waves, frames: {max:1}}))
+            }, image: waves, frames: {max:14}}))
         }
-    })}) */
+    })})
 
 collisionsMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
@@ -184,7 +189,7 @@ const keys = {
 }
 
 
-const movables = [background, ...boundaries, foreground, poke]
+const movables = [background, ...boundaries, foreground, poke, ...oceans]
 function rectangularCollision ({rectangle1, rectangle2}){
     return (
         rectangle1.position.x + rectangle1.width >= rectangle2.position.x && 
@@ -202,9 +207,10 @@ function animate(){
     })
 
     
-    /* oceans.forEach(ocean => {
+    oceans.forEach(ocean => {
         ocean.draw()
-    }) */
+    }) 
+    console.log(oceans)
     poke.draw()
     player.draw()
   
