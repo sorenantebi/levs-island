@@ -156,7 +156,7 @@ function animate(){
     boundaries.forEach(boundary => {
         boundary.draw()
     })
-
+    oceans
     poke.draw()
     player.draw()
   
