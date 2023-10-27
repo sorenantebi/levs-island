@@ -10,7 +10,10 @@ for (let i = 0; i < collisions.length; i+=50){
   
 
 }
-
+const collisionsMapInside = []
+for (let i =0; i < indoorCollisions.length; i +=50){
+    collisionsMapInside.push(indoorCollisions.slice(i,i+50))
+}
 
 const oceanMap = []
 for (let i = 0; i < land.length; i+=50){
@@ -63,6 +66,7 @@ class oceanTile {
     }
 } 
 const boundaries = []
+const indoorBoundaries = []
 const oceans = []
 const offset = {
     x: -450,
@@ -104,6 +108,14 @@ collisionsMapOutside.forEach((row, i) => {
         }, width: 2, height: 40}))}
     })
 })
+
+collisionsMapInside.forEach((row, i) => {
+    row.forEach((symbol, j) => {
+        if (symbol == 856){
+        indoorBoundaries.push(new Boundary({position: {
+            x: j * 48 +offset.x -255,
+            y: i * 48 + offset.y -415
+        }, width: 40, height: 40}))}})})
 
 class Pokemon {
     constructor({image, position}){
@@ -153,6 +165,24 @@ const player = new Sprite ({
     
 })
 
+const playerInside = new Sprite ({
+    position: {
+        x: canvas.width / 2 - 140 /4 ,
+        y: canvas.height/2 - 53/4 
+    },
+    image: playerUp,
+    frames: {
+        max: 4
+    },
+    sprites: {
+        up: playerUp,
+        down: playerDown,
+        left: playerLeft,
+        right: playerRight
+    } 
+    
+})
+
 const poke = new Pokemon({
     position: {
         x: 450,
@@ -176,8 +206,8 @@ const insideImage = new Image()
 
 insideImage.src = './img/inside.png'
 const insideBackground = new Sprite ({position:{
-    x:offset.x,
-    y:offset.y
+    x:offset.x-255,
+    y:offset.y-415  
 }, image: insideImage}) 
 
 
@@ -198,7 +228,7 @@ const keys = {
 }
 
 
-const movables = [background, ...boundaries, foreground, poke, ...oceans, insideBackground]
+const movables = [background, ...boundaries, foreground, poke, ...oceans, insideBackground, ...indoorBoundaries]
 function rectangularCollision ({rectangle1, rectangle2}){
     return (
         rectangle1.position.x + rectangle1.width >= rectangle2.position.x && 
@@ -325,17 +355,17 @@ const characterLocation = {
 class insideMap {
     draw(){
         insideBackground.draw()
-        player.draw()
-
+        playerInside.draw()
+          
         let moving  =  true 
-        player.moving = false
+        playerInside.moving = false
         if (keys.ArrowUp.pressed && lastKey=='ArrowUp'){
-            player.moving = true
-            player.image = player.sprites.up
-            for(let i = 0; i< boundaries.length; i++){
-                const boundary = boundaries[i]
+            playerInside.moving = true
+            playerInside.image = playerInside.sprites.up
+            for(let i = 0; i< indoorBoundaries.length; i++){
+                const boundary = indoorBoundaries[i]
                 if (rectangularCollision({
-                    rectangle1: player,
+                    rectangle1: playerInside,
                     rectangle2:{...boundary, position:{
                         x: boundary.position.x,
                         y: boundary.position.y +1.7
@@ -351,12 +381,12 @@ class insideMap {
             })}
             
         } else if (keys.ArrowDown.pressed && lastKey=='ArrowDown'){
-            player.moving = true
-            player.image = player.sprites.down
-            for(let i = 0; i< boundaries.length; i++){
-                const boundary = boundaries[i]
+            playerInside.moving = true
+            playerInside.image = playerInside.sprites.down
+            for(let i = 0; i< indoorBoundaries.length; i++){
+                const boundary = indoorBoundaries[i]
                 if (rectangularCollision({
-                    rectangle1: player,
+                    rectangle1: playerInside,
                     rectangle2:{...boundary, position:{
                         x: boundary.position.x,
                         y: boundary.position.y -1.7
@@ -371,12 +401,12 @@ class insideMap {
                 movable.position.y -=1.7
             })}
         } else if (keys.ArrowLeft.pressed && lastKey=='ArrowLeft'){
-            player.moving = true
-            player.image = player.sprites.left
-            for(let i = 0; i< boundaries.length; i++){
-                const boundary = boundaries[i]
+            playerInside.moving = true
+            playerInside.image = playerInside.sprites.left
+            for(let i = 0; i< indoorBoundaries.length; i++){
+                const boundary = indoorBoundaries[i]
                 if (rectangularCollision({
-                    rectangle1: player,
+                    rectangle1: playerInside,
                     rectangle2:{...boundary, position:{
                         x: boundary.position.x +1.7,
                         y: boundary.position.y 
@@ -391,12 +421,12 @@ class insideMap {
                 movable.position.x +=1.7
             })}
         } else if (keys.ArrowRight.pressed && lastKey=='ArrowRight'){
-            player.moving = true
-            player.image = player.sprites.right
-            for(let i = 0; i< boundaries.length; i++){
-                const boundary = boundaries[i]
+            playerInside.moving = true
+            playerInside.image = playerInside.sprites.right
+            for(let i = 0; i< indoorBoundaries.length; i++){
+                const boundary = indoorBoundaries[i]
                 if (rectangularCollision({
-                    rectangle1: player,
+                    rectangle1: playerInside,
                     rectangle2:{...boundary, position:{
                         x: boundary.position.x -1.7,
                         y: boundary.position.y 
@@ -413,7 +443,7 @@ class insideMap {
         } 
 
         if (!moving) {
-        player.frames.val = 0
+            playerInside.frames.val = 0
         }
     }
 }
