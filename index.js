@@ -3,6 +3,7 @@ const c =canvas.getContext('2d')
 canvas.width = 1024
 canvas.height = 576 
 
+
 const collisionsMap = []
 for (let i = 0; i < collisions.length; i+=50){
     collisionsMap.push(collisions.slice(i, i + 50))
@@ -24,7 +25,7 @@ class Boundary {
     }
 
     draw(){
-        c.fillStyle = "rgba(255,0,0,0)"
+        c.fillStyle = "rgba(255, 0,0,0)"
         c.fillRect(this.position.x, this.position.y, this.width, this.height)
     }
 }
@@ -40,22 +41,21 @@ class oceanTile {
     }
 
     draw(){
-        //c.drawImage(this.image, this.position.x, this.position.y, this.image.width/this.frames.max, this.image.height)
-
+       
         c.drawImage(this.image,
             this.frames.val * (this.image.width/this.frames.max),
             0,
             this.image.width/ this.frames.max,
             this.image.height,
-            this.position.x,
-            this.position.y,
-            this.image.width / this.frames.max,
-            this.image.height)
+            this.position.x -1,
+            this.position.y -1,
+            this.image.width / this.frames.max + 2,
+            this.image.height +2)
         
         if (this.frames.max >1) {
             this.frames.elapsed ++
         }
-        if (this.frames.elapsed % 15 == 0){
+        if (this.frames.elapsed % 10 == 0){
             if (this.frames.val < this.frames.max - 1) this.frames.val++
             else this.frames.val = 0
         } 
@@ -167,7 +167,7 @@ const background = new Sprite({position:{
 
 const foreground = new Sprite({position:{
     x:offset.x,
-    y:offset.y
+    y:offset.y +2
 }, image: foreGround})
 
 
@@ -201,16 +201,18 @@ function rectangularCollision ({rectangle1, rectangle2}){
 }
 function animate(){
     window.requestAnimationFrame(animate)
+    
     background.draw()
+   
+    c.imageSmoothingEnabled = false
+    oceans.forEach(ocean => {
+        ocean.draw()
+    }) 
     boundaries.forEach(boundary => {
         boundary.draw()
     })
 
     
-    oceans.forEach(ocean => {
-        ocean.draw()
-    }) 
-    console.log(oceans)
     poke.draw()
     player.draw()
   
@@ -226,7 +228,7 @@ function animate(){
                 rectangle1: player,
                 rectangle2:{...boundary, position:{
                     x: boundary.position.x,
-                    y: boundary.position.y +2
+                    y: boundary.position.y +1.7
                 }}
             })){
                 console.log('colliding')
@@ -235,7 +237,7 @@ function animate(){
             }
         } 
         if (moving){movables.forEach((movable)=>{
-            movable.position.y +=2
+            movable.position.y +=1.7
         })}
         
     } else if (keys.ArrowDown.pressed && lastKey=='ArrowDown'){
@@ -247,7 +249,7 @@ function animate(){
                 rectangle1: player,
                 rectangle2:{...boundary, position:{
                     x: boundary.position.x,
-                    y: boundary.position.y -2
+                    y: boundary.position.y -1.7
                 }}
             })){
                 console.log('colliding')
@@ -256,7 +258,7 @@ function animate(){
             }
         }
         if (moving){movables.forEach((movable)=>{
-            movable.position.y -=2
+            movable.position.y -=1.7
         })}
     } else if (keys.ArrowLeft.pressed && lastKey=='ArrowLeft'){
         player.moving = true
@@ -266,7 +268,7 @@ function animate(){
             if (rectangularCollision({
                 rectangle1: player,
                 rectangle2:{...boundary, position:{
-                    x: boundary.position.x +2,
+                    x: boundary.position.x +1.7,
                     y: boundary.position.y 
                 }}
             })){
@@ -276,7 +278,7 @@ function animate(){
             }
         }
         if (moving){movables.forEach((movable)=>{
-            movable.position.x +=2
+            movable.position.x +=1.7
         })}
     } else if (keys.ArrowRight.pressed && lastKey=='ArrowRight'){
         player.moving = true
@@ -286,7 +288,7 @@ function animate(){
             if (rectangularCollision({
                 rectangle1: player,
                 rectangle2:{...boundary, position:{
-                    x: boundary.position.x -2,
+                    x: boundary.position.x -1.7,
                     y: boundary.position.y 
                 }}
             })){
@@ -296,7 +298,7 @@ function animate(){
             }
         }
         if (moving){movables.forEach((movable)=>{
-            movable.position.x -=2
+            movable.position.x -=1.7
         })}
     } 
 
