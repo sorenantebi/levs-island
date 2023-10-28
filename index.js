@@ -571,15 +571,23 @@ window.addEventListener('keyup', (e) => {
 
 })
 
+const myDiv = document.querySelector('#overlapping')
+const imageElement = document.querySelector('#image')
 let clicked = false
-addEventListener('click', () => {
+myDiv.addEventListener('click', () => {
+    console.log('Div was clicked!');
     if (!clicked) {
-    
+        
         audio.Map.play()
+        audio.loop = true
+        imageElement.src = './img/speakerOn.png'
         clicked = true
     }
     else if (clicked){
-        audio.Map.stop()
+        audio.Map.pause()
+        imageElement.src = './img/speakerOff.png'
         clicked = false
     }
 })
+
+//add audio loop
