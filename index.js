@@ -106,6 +106,12 @@ collisionsMapOutside.forEach((row, i) => {
             x: j * 48 +offset.x + 38,
             y: i * 48 + offset.y 
         }, width: 2, height: 40}))}
+
+        else if (symbol == 4) {
+            boundaries.push(new Boundary({position: {
+                x: j * 48 +offset.x + 8,
+                y: i * 48 + offset.y 
+            }, width: 40, height: 2}))}
     })
 })
 
@@ -114,8 +120,18 @@ collisionsMapInside.forEach((row, i) => {
         if (symbol == 856){
         indoorBoundaries.push(new Boundary({position: {
             x: j * 48 +offset.x -255,
-            y: i * 48 + offset.y -415
-        }, width: 40, height: 40}))}})})
+            y: i * 48 + offset.y -520
+        }, width: 40, height: 40}))}
+        if (symbol == 1){
+            indoorBoundaries.push(new Boundary({position: {
+                x: j * 48 +offset.x -245,
+                y: i * 48 + offset.y -520
+            }, width: 2, height: 40}))} 
+        if (symbol == 2){
+            indoorBoundaries.push(new Boundary({position: {
+                x: j * 48 +offset.x -232,
+                y: i * 48 + offset.y -520
+            }, width: 2, height: 40}))}})})
 
 class Pokemon {
     constructor({image, position}){
@@ -150,7 +166,7 @@ playerUp.src = './img/up.png'
 const player = new Sprite ({
     position: {
         x: canvas.width / 2 - 140 /4,
-        y: canvas.height/2 - 68/4 - 100
+        y: canvas.height/2 - 53/4 - 100
     },
     image: playerDown,
     frames: {
@@ -167,8 +183,8 @@ const player = new Sprite ({
 
 const playerInside = new Sprite ({
     position: {
-        x: canvas.width / 2 - 140 /4 ,
-        y: canvas.height/2 - 53/4 
+        x: canvas.width / 2 - 140 /4,
+        y: canvas.height/2 - 53/4 +5    
     },
     image: playerUp,
     frames: {
@@ -206,8 +222,8 @@ const insideImage = new Image()
 
 insideImage.src = './img/inside.png'
 const insideBackground = new Sprite ({position:{
-    x:offset.x-255,
-    y:offset.y-415  
+    x:offset.x-260,
+    y:offset.y-520  
 }, image: insideImage}) 
 
 
@@ -228,7 +244,17 @@ const keys = {
 }
 
 
-const movables = [background, ...boundaries, foreground, poke, ...oceans, insideBackground, ...indoorBoundaries]
+const door = new Boundary({position: {
+    x: 19 * 48 +offset.x,
+    y: 13 * 48 + offset.y 
+    
+}, width: 40, height: 40})
+const doorToOutside = new Boundary({position: {
+    x: 25 * 48 +offset.x -260,
+    y: 27 * 48 + offset.y -550
+    
+}, width: 40, height: 40})
+const movables = [background, ...boundaries, foreground, poke, ...oceans, insideBackground, ...indoorBoundaries, door, doorToOutside]
 function rectangularCollision ({rectangle1, rectangle2}){
     return (
         rectangle1.position.x + rectangle1.width >= rectangle2.position.x && 
@@ -249,7 +275,7 @@ class outsideMap {
         boundaries.forEach(boundary => {
             boundary.draw()
         })
-
+        door.draw()
         
         poke.draw()
         player.draw()
@@ -266,7 +292,7 @@ class outsideMap {
                     rectangle1: player,
                     rectangle2:{...boundary, position:{
                         x: boundary.position.x,
-                        y: boundary.position.y +1.7
+                        y: boundary.position.y +2
                     }}
                 })){
                     console.log('colliding')
@@ -274,8 +300,20 @@ class outsideMap {
                     break
                 }
             } 
+            if (rectangularCollision({
+                rectangle1: player,
+                rectangle2:{...door, position:{
+                    x: door.position.x,
+                    y: door.position.y +2
+                }}
+            })){
+                
+                characterLocation.location = true
+                player.image = player.sprites.down
+                return
+            }
             if (moving){movables.forEach((movable)=>{
-                movable.position.y +=1.7
+                movable.position.y +=2
             })}
             
         } else if (keys.ArrowDown.pressed && lastKey=='ArrowDown'){
@@ -287,7 +325,7 @@ class outsideMap {
                     rectangle1: player,
                     rectangle2:{...boundary, position:{
                         x: boundary.position.x,
-                        y: boundary.position.y -1.7
+                        y: boundary.position.y -2
                     }}
                 })){
                     console.log('colliding')
@@ -296,7 +334,7 @@ class outsideMap {
                 }
             }
             if (moving){movables.forEach((movable)=>{
-                movable.position.y -=1.7
+                movable.position.y -=2
             })}
         } else if (keys.ArrowLeft.pressed && lastKey=='ArrowLeft'){
             player.moving = true
@@ -306,7 +344,7 @@ class outsideMap {
                 if (rectangularCollision({
                     rectangle1: player,
                     rectangle2:{...boundary, position:{
-                        x: boundary.position.x +1.7,
+                        x: boundary.position.x +2,
                         y: boundary.position.y 
                     }}
                 })){
@@ -316,7 +354,7 @@ class outsideMap {
                 }
             }
             if (moving){movables.forEach((movable)=>{
-                movable.position.x +=1.7
+                movable.position.x +=2
             })}
         } else if (keys.ArrowRight.pressed && lastKey=='ArrowRight'){
             player.moving = true
@@ -326,7 +364,7 @@ class outsideMap {
                 if (rectangularCollision({
                     rectangle1: player,
                     rectangle2:{...boundary, position:{
-                        x: boundary.position.x -1.7,
+                        x: boundary.position.x -2,
                         y: boundary.position.y 
                     }}
                 })){
@@ -336,25 +374,29 @@ class outsideMap {
                 }
             }
             if (moving){movables.forEach((movable)=>{
-                movable.position.x -=1.7
+                movable.position.x -=2
             })}
         } 
 
         if (!moving) {
         player.frames.val = 0
         }
+       
     }
 }
 
 const outside = new outsideMap()
 
 const characterLocation = {
-    location: true
+    location: false
 }
 
 class insideMap {
     draw(){
         insideBackground.draw()
+        indoorBoundaries.forEach(boundary => {
+            boundary.draw()
+        })
         playerInside.draw()
           
         let moving  =  true 
@@ -368,7 +410,7 @@ class insideMap {
                     rectangle1: playerInside,
                     rectangle2:{...boundary, position:{
                         x: boundary.position.x,
-                        y: boundary.position.y +1.7
+                        y: boundary.position.y +2
                     }}
                 })){
                     console.log('colliding')
@@ -377,7 +419,7 @@ class insideMap {
                 }
             } 
             if (moving){movables.forEach((movable)=>{
-                movable.position.y +=1.7
+                movable.position.y +=2
             })}
             
         } else if (keys.ArrowDown.pressed && lastKey=='ArrowDown'){
@@ -389,7 +431,7 @@ class insideMap {
                     rectangle1: playerInside,
                     rectangle2:{...boundary, position:{
                         x: boundary.position.x,
-                        y: boundary.position.y -1.7
+                        y: boundary.position.y -2
                     }}
                 })){
                     console.log('colliding')
@@ -397,8 +439,20 @@ class insideMap {
                     break
                 }
             }
+            if (rectangularCollision({
+                rectangle1: player,
+                rectangle2:{...doorToOutside, position:{
+                    x: doorToOutside.position.x,
+                    y: doorToOutside.position.y +2
+                }}
+            })){
+                
+                characterLocation.location = false
+                playerInside.image = playerInside.sprites.up
+                return
+            }
             if (moving){movables.forEach((movable)=>{
-                movable.position.y -=1.7
+                movable.position.y -=2
             })}
         } else if (keys.ArrowLeft.pressed && lastKey=='ArrowLeft'){
             playerInside.moving = true
@@ -408,7 +462,7 @@ class insideMap {
                 if (rectangularCollision({
                     rectangle1: playerInside,
                     rectangle2:{...boundary, position:{
-                        x: boundary.position.x +1.7,
+                        x: boundary.position.x +2,
                         y: boundary.position.y 
                     }}
                 })){
@@ -418,7 +472,7 @@ class insideMap {
                 }
             }
             if (moving){movables.forEach((movable)=>{
-                movable.position.x +=1.7
+                movable.position.x +=2
             })}
         } else if (keys.ArrowRight.pressed && lastKey=='ArrowRight'){
             playerInside.moving = true
@@ -428,7 +482,7 @@ class insideMap {
                 if (rectangularCollision({
                     rectangle1: playerInside,
                     rectangle2:{...boundary, position:{
-                        x: boundary.position.x -1.7,
+                        x: boundary.position.x -2,
                         y: boundary.position.y 
                     }}
                 })){
@@ -438,22 +492,28 @@ class insideMap {
                 }
             }
             if (moving){movables.forEach((movable)=>{
-                movable.position.x -=1.7
+                movable.position.x -=2
             })}
         } 
 
         if (!moving) {
             playerInside.frames.val = 0
         }
+
+
     }
 }
 const inside = new insideMap()
 function animate(){
     window.requestAnimationFrame(animate)
+
+
     if (characterLocation.location == false){
         outside.draw()
+      
     }else if (characterLocation.location == true){
         inside.draw()
+        
     }
     
 
@@ -511,4 +571,15 @@ window.addEventListener('keyup', (e) => {
 
 })
 
-
+let clicked = false
+addEventListener('click', () => {
+    if (!clicked) {
+    
+        audio.Map.play()
+        clicked = true
+    }
+    else if (clicked){
+        audio.Map.stop()
+        clicked = false
+    }
+})
