@@ -4,6 +4,18 @@ canvas.width = 1024
 canvas.height = 576 
 
 
+
+function fadeOut (){
+    gsap.to('#titlePage', {
+        opacity: 0, duration:2,  delay: 1
+    }) 
+}
+gsap.fromTo('#titlePage',{opacity: 0}, {
+    opacity: 1, duration:3, onComplete: fadeOut
+}) 
+
+
+
 const collisionsMapOutside = []
 for (let i = 0; i < collisions.length; i+=50){
     collisionsMapOutside.push(collisions.slice(i, i + 50))
@@ -29,12 +41,16 @@ class Boundary {
     }
 
     draw(){
-        c.fillStyle = "rgba(255, 0,0,0)"
+        c.fillStyle = "red"//"rgba(255, 0,0,0)"
         c.fillRect(this.position.x, this.position.y, this.width, this.height)
     }
 }
 const waves = new Image()
 waves.src = './img/tile.png'
+class descriptiveObject {
+
+}
+
 
 class oceanTile {
     constructor({position, image, frames = {max:1}}){
@@ -226,7 +242,10 @@ const insideBackground = new Sprite ({position:{
     y:offset.y-520  
 }, image: insideImage}) 
 
-
+const testBoundary = new Boundary({position: {
+    x: 17 * 48 +offset.x  +40,
+    y: 20 * 48 + offset.y 
+}, width: 1, height: 40})
 
 const keys = {
     ArrowUp: {
@@ -254,7 +273,7 @@ const doorToOutside = new Boundary({position: {
     y: 27 * 48 + offset.y -550
     
 }, width: 40, height: 40})
-const movables = [background, ...boundaries, foreground, poke, ...oceans, insideBackground, ...indoorBoundaries, door, doorToOutside]
+const movables = [background, ...boundaries, foreground, poke, ...oceans, insideBackground, ...indoorBoundaries, door, doorToOutside, testBoundary]
 function rectangularCollision ({rectangle1, rectangle2}){
     return (
         rectangle1.position.x + rectangle1.width >= rectangle2.position.x && 
@@ -264,8 +283,11 @@ function rectangularCollision ({rectangle1, rectangle2}){
     )
 
 }
+
+let isTextDisplayed = false;
 class outsideMap {
     draw(){
+        
         background.draw()
    
         c.imageSmoothingEnabled = false
@@ -275,6 +297,7 @@ class outsideMap {
         boundaries.forEach(boundary => {
             boundary.draw()
         })
+        testBoundary.draw()
         door.draw()
         
         poke.draw()
@@ -312,6 +335,22 @@ class outsideMap {
                 player.image = player.sprites.down
                 return
             }
+
+            if (rectangularCollision({
+                rectangle1: player,
+                rectangle2:{...testBoundary, position:{
+                    x: testBoundary.position.x,
+                    y: testBoundary.position.y +2
+                }}
+            })){
+                
+                moving = false
+                isTextDisplayed = true
+            }
+            if (moving) {
+                // Player is moving, reset the flag
+                isTextDisplayed = false;
+            }
             if (moving){movables.forEach((movable)=>{
                 movable.position.y +=2
             })}
@@ -333,6 +372,21 @@ class outsideMap {
                     break
                 }
             }
+            if (rectangularCollision({
+                rectangle1: player,
+                rectangle2:{...testBoundary, position:{
+                    x: testBoundary.position.x,
+                    y: testBoundary.position.y -2
+                }}
+            })){
+                
+                moving = false
+                isTextDisplayed = true
+            }
+            if (moving) {
+                // Player is moving, reset the flag
+                isTextDisplayed = false;
+            }
             if (moving){movables.forEach((movable)=>{
                 movable.position.y -=2
             })}
@@ -353,6 +407,21 @@ class outsideMap {
                     break
                 }
             }
+            if (rectangularCollision({
+                rectangle1: player,
+                rectangle2:{...testBoundary, position:{
+                    x: testBoundary.position.x+2,
+                    y: testBoundary.position.y 
+                }}
+            })){
+                
+                moving = false
+                isTextDisplayed = true
+            }
+            if (moving) {
+                // Player is moving, reset the flag
+                isTextDisplayed = false;
+            }
             if (moving){movables.forEach((movable)=>{
                 movable.position.x +=2
             })}
@@ -372,6 +441,21 @@ class outsideMap {
                     moving = false
                     break
                 }
+                if (rectangularCollision({
+                    rectangle1: player,
+                    rectangle2:{...testBoundary, position:{
+                        x: testBoundary.position.x-2,
+                        y: testBoundary.position.y 
+                    }}
+                })){
+                    
+                    moving = false
+                    isTextDisplayed = true
+                }
+                if (moving) {
+                    // Player is moving, reset the flag
+                    isTextDisplayed = false;
+                }
             }
             if (moving){movables.forEach((movable)=>{
                 movable.position.x -=2
@@ -380,6 +464,13 @@ class outsideMap {
 
         if (!moving) {
         player.frames.val = 0
+        }
+        if (isTextDisplayed) {
+            document.querySelector('#textDiv').style.display = 'block';
+            document.querySelector('#dialogueBox').innerHTML = "Lev's island";
+          } else {
+            document.querySelector('#textDiv').style.display = 'none';
+            document.querySelector('#dialogueBox').innerHTML = "";
         }
        
     }
@@ -543,6 +634,7 @@ window.addEventListener('keydown', (e) => {
             keys.ArrowRight.pressed = true
             lastKey = 'ArrowRight'
             break
+        
     }
 
 })
@@ -578,11 +670,15 @@ let songIndex = 0
 const songs = [
     './audio/BlankSpace.mp3',
     './audio/LookWhatYouMadeMeDo.mp3',
+    './audio/LoveStory.mp3',
     './audio/BadBlood.mp3',
     './audio/CruelSummer.mp3',
     './audio/Style.mp3',
     './audio/AntiHero.mp3',
     './audio/OutOfTheWoods.mp3',
+    './audio/Karma.mp3',
+    './audio/IKnewYouWereTrouble.mp3'
+
 ]
 
 let isPlaying = false;
@@ -641,6 +737,7 @@ function playNextSong(){
 }
 let clicked = false
 let wasPaused = false
+
 myDiv.addEventListener('click', () => {
     console.log('Div was clicked!');
     if (!clicked) {

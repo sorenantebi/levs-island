@@ -37,4 +37,8 @@ class Sprite {
        
         
     }
+
+    inspect(){
+        getDescription
+    }
 }
