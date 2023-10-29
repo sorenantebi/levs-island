@@ -41,7 +41,7 @@ class Boundary {
     }
 
     draw(){
-        c.fillStyle = "rgba(255, 0,0,0)"
+        c.fillStyle = "red"//"rgba(255, 0,0,0)"
         c.fillRect(this.position.x, this.position.y, this.width, this.height)
     }
 }
@@ -109,9 +109,9 @@ collisionsMapInside.forEach((row, i) => {
     row.forEach((symbol, j) => {
         if (symbol == 856){
         indoorBoundaries.push(new Boundary({position: {
-            x: j * 48 +offset.in.x -5,
+            x: j * 48 +offset.in.x -6,
             y: i * 48 + offset.in.y 
-        }, width: 40, height: 40}))}
+        }, width: 42, height: 40}))}
         if (symbol == 1){
             indoorBoundaries.push(new Boundary({position: {
                 x: j * 48 +offset.in.x +5,
@@ -121,8 +121,65 @@ collisionsMapInside.forEach((row, i) => {
             indoorBoundaries.push(new Boundary({position: {
                 x: j * 48 +offset.in.x +20,
                 y: i * 48 + offset.in.y 
-            }, width: 2, height: 40}))}})})
-
+            }, width: 2, height: 40}))}
+         if (symbol == 3){
+            indoorBoundaries.push(new Boundary({position: {
+                x: j * 48 +offset.in.x,
+                y: i * 48 + offset.in.y -20
+            }, width: 40, height: 2}))}
+        if (symbol == 4){
+            indoorBoundaries.push(new Boundary({position: {
+                x: j * 48 +offset.in.x -3,
+                y: i * 48 + offset.in.y 
+            }, width: 31, height: 2}))}
+        if (symbol == 5){
+            indoorBoundaries.push(new Boundary({position: {
+                x: j * 48 +offset.in.x,
+                y: i * 48 + offset.in.y 
+            }, width: 50, height: 60}))}
+        if (symbol == 6){
+            indoorBoundaries.push(new Boundary({position: {
+                x: j * 48 +offset.in.x -22,
+                y: i * 48 + offset.in.y 
+            }, width: 50, height: 60}))}
+        if (symbol == 7){
+            indoorBoundaries.push(new Boundary({position: {
+                x: j * 48 +offset.in.x -20,
+                y: i * 48 + offset.in.y 
+            }, width: 40, height: 2}))}
+        if (symbol == 8){
+            indoorBoundaries.push(new Boundary({position: {
+                x: j * 48 +offset.in.x -5,
+                y: i * 48 + offset.in.y 
+            }, width: 38, height: 2}))}
+        if (symbol == 9){
+            indoorBoundaries.push(new Boundary({position: {
+                x: j * 48 +offset.in.x -15,
+                y: i * 48 + offset.in.y + 5
+            }, width: 105, height: 75}))}
+        if (symbol == 10){
+            indoorBoundaries.push(new Boundary({position: {
+                x: j * 48 +offset.in.x + 20,
+                y: i * 48 + offset.in.y 
+            }, width: 16, height: 40}))}
+         if (symbol == 11){
+            indoorBoundaries.push(new Boundary({position: {
+                x: j * 48 +offset.in.x + 18,
+                y: i * 48 + offset.in.y +2
+            }, width: 40, height: 2}))}
+            
+        if (symbol == 12){
+            indoorBoundaries.push(new Boundary({position: {
+                x: j * 48 +offset.in.x + 18,
+                y: i * 48 + offset.in.y +38
+            }, width: 40, height: 2}))}
+        if (symbol == 13){
+            indoorBoundaries.push(new Boundary({position: {
+                x: j * 48 +offset.in.x -5,
+                y: i * 48 + offset.in.y 
+            }, width: 44, height: 40}))}
+        })})
+            
 class Pokemon {
     constructor({image, position}){
         this.position = position
@@ -219,20 +276,27 @@ const insideBackground = new Sprite ({position:{
     y:offset.in.y  
 }, image: insideImage}) 
 
+const insideForeGround = new Image()
+insideForeGround.src = './img/foregroundInside.png'
+const insideForeground = new Sprite({
+    position: {x:offset.in.x-10,
+    y:offset.in.y  
+}, image: insideForeGround})
+
 const testBoundary = new descriptiveObject({position: {
     x: 17 * 48 +offset.out.x  +40,
     y: 20 * 48 + offset.out.y 
-}, width: 1, height: 40, text: "Lev's island"})
+}, width: 1, height: 40, text: "Lev's Island"})
 
 const sign = new descriptiveObject({position: {
     x: 28 * 48 +offset.out.x + 5,
     y: 17 * 48 + offset.out.y -45
-}, width: 40, height: 2, text: "The Field of Flowers"})
+}, width: 40, height: 2, text: "The Field of Flowers \u2740 \u273F"})
 
 const mailbox = new descriptiveObject({position: {
     x: 20 * 48 +offset.out.x + 10,
     y: 15 * 48 + offset.out.y 
-}, width: 30, height: 2, text: "S + L \&#9829"})
+}, width: 30, height: 2, text: "S + L <br>\u2665"})
 
 const keys = {
     ArrowUp: {
@@ -254,7 +318,7 @@ const door = new Boundary({position: {
     x: 19 * 48 +offset.out.x,
     y: 13 * 48 + offset.out.y 
     
-}, width: 40, height: 45})
+}, width: 40, height: 50})
 
 const doorBoundary = new Boundary({
     position: {
@@ -270,11 +334,11 @@ const openingDoor = new Door({
 })
 const doorToOutside = new Boundary({position: {
     x: 25 * 48 +offset.in.x -10,
-    y: 27 * 48 + offset.in.y -30
+    y: 27 * 48 + offset.in.y -40
     
 }, width: 40, height: 40})
 const objects = [testBoundary, sign, mailbox]
-const movables = [background, ...boundaries, foreground, poke, ...oceans, insideBackground, ...indoorBoundaries, door, doorToOutside, openingDoor,...objects, doorBoundary]
+const movables = [background, ...boundaries, foreground, poke, ...oceans, insideBackground, ...indoorBoundaries, door, doorToOutside, openingDoor,...objects, doorBoundary, insideForeground]
 function rectangularCollision ({rectangle1, rectangle2}){
     return (
         rectangle1.position.x + rectangle1.width >= rectangle2.position.x && 
@@ -284,9 +348,15 @@ function rectangularCollision ({rectangle1, rectangle2}){
     )
 
 }
+const characterLocation = {
+    location: false
+}
+let transitioning = false
 function fade(){
     gsap.to('#transitionImage', {
         opacity: 0, duration:2, onComplete: function() {
+
+            
             // This code will execute when the animation is complete
             console.log("Animation is complete");
         
@@ -296,7 +366,9 @@ function fade(){
 let isTextDisplayed = false;
 class outsideMap {
     draw(){
-        
+        if (transitioning){
+            return
+        }
         background.draw()
    
         c.imageSmoothingEnabled = false
@@ -342,11 +414,14 @@ class outsideMap {
                     x: door.position.x,
                     y: door.position.y +2
                 }}
-            })){
+            })){transitioning = true
+                //player.frames.val = 0
                 gsap.to(('#transitionImage'), {
                     opacity: 1, duration:1, onComplete: function(){fade()
+                        
                         characterLocation.location = true
                         player.image = player.sprites.down
+                        transitioning = false
                         return
                         } 
                 })
@@ -514,7 +589,8 @@ class outsideMap {
         } 
 
         if (!moving) {
-        player.frames.val = 0
+            player.frames.val = 0
+
         }
         
         if (!isTextDisplayed) {
@@ -526,18 +602,20 @@ class outsideMap {
 
 const outside = new outsideMap()
 
-const characterLocation = {
-    location: false
-}
+
 
 class insideMap {
     draw(){
+        if (transitioning){
+            return
+        }
         insideBackground.draw()
         indoorBoundaries.forEach(boundary => {
             boundary.draw()
         })
         playerInside.draw()
-          
+
+        insideForeground.draw()  
         let moving  =  true 
         playerInside.moving = false
         if (keys.ArrowUp.pressed && lastKey=='ArrowUp'){
@@ -557,6 +635,10 @@ class insideMap {
                     break
                 }
             } 
+            if (moving) {
+                // Player is moving, reset the flag
+                isTextDisplayed = false;
+            }
             if (moving){movables.forEach((movable)=>{
                 movable.position.y +=2
             })}
@@ -584,15 +666,21 @@ class insideMap {
                     x: doorToOutside.position.x,
                     y: doorToOutside.position.y +2
                 }}
-            })){
+            })){transitioning = true
+                //player.frames.val = 0
                 gsap.to(('#transitionImage'), {
                     opacity: 1, duration:1, onComplete: function(){fade()
                         characterLocation.location = false
                         playerInside.image = playerInside.sprites.up
+                        transitioning = false
                         return
                         } 
                 })
                
+            }
+            if (moving) {
+                // Player is moving, reset the flag
+                isTextDisplayed = false;
             }
             if (moving){movables.forEach((movable)=>{
                 movable.position.y -=2
@@ -614,6 +702,10 @@ class insideMap {
                     break
                 }
             }
+            if (moving) {
+                // Player is moving, reset the flag
+                isTextDisplayed = false;
+            }
             if (moving){movables.forEach((movable)=>{
                 movable.position.x +=2
             })}
@@ -634,6 +726,10 @@ class insideMap {
                     break
                 }
             }
+            if (moving) {
+                // Player is moving, reset the flag
+                isTextDisplayed = false;
+            }
             if (moving){movables.forEach((movable)=>{
                 movable.position.x -=2
             })}
@@ -642,7 +738,10 @@ class insideMap {
         if (!moving) {
             playerInside.frames.val = 0
         }
-
+        if (!isTextDisplayed) {
+            document.querySelector('#textDiv').style.display = 'none';
+            document.querySelector('#dialogueBox').innerHTML = "";
+        }
 
     }
 }
@@ -650,7 +749,7 @@ const inside = new insideMap()
 function animate(){
     window.requestAnimationFrame(animate)
 
-
+    
     if (characterLocation.location == false){
        
         outside.draw()
