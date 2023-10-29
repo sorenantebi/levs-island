@@ -298,6 +298,13 @@ const mailbox = new descriptiveObject({position: {
     y: 15 * 48 + offset.out.y 
 }, width: 30, height: 2, text: "S + L <br>\u2665"})
 
+const picture = new descriptiveObjectInside({
+        position: {
+            x: 26 * 48 +offset.in.x -3,
+            y: 21 * 48 + offset.in.y +2
+        }, width: 31, height: 1, source: './img/art.png'
+     
+})
 const keys = {
     ArrowUp: {
         pressed: false
@@ -338,7 +345,8 @@ const doorToOutside = new Boundary({position: {
     
 }, width: 40, height: 40})
 const objects = [testBoundary, sign, mailbox]
-const movables = [background, ...boundaries, foreground, poke, ...oceans, insideBackground, ...indoorBoundaries, door, doorToOutside, openingDoor,...objects, doorBoundary, insideForeground]
+const insideObjects = [picture]
+const movables = [background, ...boundaries, foreground, poke, ...oceans, insideBackground, ...indoorBoundaries, door, doorToOutside, openingDoor,...objects, doorBoundary, insideForeground, ...insideObjects]
 function rectangularCollision ({rectangle1, rectangle2}){
     return (
         rectangle1.position.x + rectangle1.width >= rectangle2.position.x && 
@@ -613,8 +621,11 @@ class insideMap {
         indoorBoundaries.forEach(boundary => {
             boundary.draw()
         })
+        insideObjects.forEach(boundary => {
+            boundary.draw()
+        })
         playerInside.draw()
-
+        
         insideForeground.draw()  
         let moving  =  true 
         playerInside.moving = false
@@ -635,6 +646,22 @@ class insideMap {
                     break
                 }
             } 
+            for (let i = 0; i < insideObjects.length; i++){
+                const object = insideObjects[i]
+                if (rectangularCollision({
+                    rectangle1: playerInside,
+                    rectangle2:{...object, position:{
+                        x: object.position.x,
+                        y: object.position.y +2
+                    }}
+                })){
+                    
+                    moving = false
+                    isTextDisplayed = true
+                    object.display()
+                }
+            }
+           
             if (moving) {
                 // Player is moving, reset the flag
                 isTextDisplayed = false;
@@ -658,6 +685,21 @@ class insideMap {
                     console.log('colliding')
                     moving = false
                     break
+                }
+            }
+            for (let i = 0; i < insideObjects.length; i++){
+                const object = insideObjects[i]
+                if (rectangularCollision({
+                    rectangle1: playerInside,
+                    rectangle2:{...object, position:{
+                        x: object.position.x,
+                        y: object.position.y -2
+                    }}
+                })){
+                    
+                    moving = false
+                    isTextDisplayed = true
+                    object.display()
                 }
             }
             if (rectangularCollision({
@@ -702,6 +744,21 @@ class insideMap {
                     break
                 }
             }
+            for (let i = 0; i < insideObjects.length; i++){
+                const object = insideObjects[i]
+                if (rectangularCollision({
+                    rectangle1: playerInside,
+                    rectangle2:{...object, position:{
+                        x: object.position.x +2,
+                        y: object.position.y 
+                    }}
+                })){
+                    
+                    moving = false
+                    isTextDisplayed = true
+                    object.display()
+                }
+            }
             if (moving) {
                 // Player is moving, reset the flag
                 isTextDisplayed = false;
@@ -726,6 +783,21 @@ class insideMap {
                     break
                 }
             }
+            for (let i = 0; i < insideObjects.length; i++){
+                const object = insideObjects[i]
+                if (rectangularCollision({
+                    rectangle1: playerInside,
+                    rectangle2:{...object, position:{
+                        x: object.position.x -2,
+                        y: object.position.y 
+                    }}
+                })){
+                    
+                    moving = false
+                    isTextDisplayed = true
+                    object.display()
+                }
+            }
             if (moving) {
                 // Player is moving, reset the flag
                 isTextDisplayed = false;
@@ -741,6 +813,7 @@ class insideMap {
         if (!isTextDisplayed) {
             document.querySelector('#textDiv').style.display = 'none';
             document.querySelector('#dialogueBox').innerHTML = "";
+            document.querySelector('#largeBackground').style.display = 'none';
         }
 
     }
@@ -917,3 +990,4 @@ myOtherDiv.addEventListener('click', () => {
     console.log('Div was clicked!');
     playNextSong()
 })
+// do bed like battle zone, with text
