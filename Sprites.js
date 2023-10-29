@@ -41,4 +41,8 @@ class Sprite {
     inspect(){
         getDescription
     }
+
+    open (){
+        this.frames.val +=1
+    }
 }

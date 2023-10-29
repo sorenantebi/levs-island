@@ -14,6 +14,7 @@
 </head>
 
 <div style="display: inline-block; position: relative; ">
+    <div id="transitionImage" style="background-color: black; position: absolute; top: 0; bottom: 0; left: 0; right: 0; pointer-events: none; opacity: 0;"></div>
     <div id="overlapping" style="background-image: url('./img/bground.png'); position: absolute; top: 5; right: 2; width: 64; height: 64; text-align: center;   display: flex;
     align-items: center;
     justify-content: center;">  
@@ -31,7 +32,7 @@
     <canvas></canvas>
     <div id="textDiv" style="position: absolute; left: 50%; bottom: 2; transform: translate(-50%);  text-align: center; display: none;"> 
         <img id="textBox" src="./img/textBox.png" alt="Image" >
-        <div  id="dialogueBox" style="position: absolute; left: 50%;  top: 50%; transform: translate(-50%, -50%);  text-align: center; font-size: 14px;">
+        <div  id="dialogueBox" style="position: absolute; left: 50%;  top: 50%; transform: translate(-50%, -50%);   text-align: center;font-size: 14px;">
       
         </div>
 
@@ -40,9 +41,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js" integrity="sha512-H6cPm97FAsgIKmlBA4s774vqoN24V5gSQL4yBTDOY2su2DeXZVhQPxFK4P6GPdnZqM9fg1G3cMv5wD7e6cFLZQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js" integrity="sha512-6+YN/9o9BWrk6wSfGxQGpt3EUK6XeHi6yeHV+TYD2GR0Sj/cggRpXr1BrAQf0as6XslxomMUxXp2vIl+fv0QRA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="audio.js"></script>
+<script src="descriptiveObject.js"></script>
+<script src="oceanTile.js"></script>
 <script src="collisions.js"></script>
 <script src="indoorCollisions.js"></script>
 <script src="land.js"></script>
+<script src="door.js"></script>
 <script src="Sprites.js"></script>
 <script src="index.js"></script>
 

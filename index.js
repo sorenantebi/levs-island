@@ -7,11 +7,11 @@ canvas.height = 576
 
 function fadeOut (){
     gsap.to('#titlePage', {
-        opacity: 0, duration:2,  delay: 1
+        opacity: 0, duration:2,  delay: 0.5
     }) 
 }
 gsap.fromTo('#titlePage',{opacity: 0}, {
-    opacity: 1, duration:3, onComplete: fadeOut
+    opacity: 1, duration:2, onComplete: fadeOut
 }) 
 
 
@@ -41,112 +41,86 @@ class Boundary {
     }
 
     draw(){
-        c.fillStyle = "red"//"rgba(255, 0,0,0)"
+        c.fillStyle = "rgba(255, 0,0,0)"
         c.fillRect(this.position.x, this.position.y, this.width, this.height)
     }
 }
+
+
+
+
+const offset = {
+    out: {x: -450,
+    y: -600},
+    in: {x:0, y:0}
+}
+offset.in.x = offset.out.x-250
+offset.in.y = offset.out.y -520
+////////////////////////////
 const waves = new Image()
 waves.src = './img/tile.png'
-class descriptiveObject {
-
-}
-
-
-class oceanTile {
-    constructor({position, image, frames = {max:1}}){
-        this.position = position
-        this.image = image
-        this.frames = {...frames, val: 0, elapsed: 0}
-        
-    }
-
-    draw(){
-       
-        c.drawImage(this.image,
-            this.frames.val * (this.image.width/this.frames.max),
-            0,
-            this.image.width/ this.frames.max,
-            this.image.height,
-            this.position.x -1,
-            this.position.y -1,
-            this.image.width / this.frames.max + 2,
-            this.image.height +2)
-        
-        if (this.frames.max >1) {
-            this.frames.elapsed ++
-        }
-        if (this.frames.elapsed % 10 == 0){
-            if (this.frames.val < this.frames.max - 1) this.frames.val++
-            else this.frames.val = 0
-        } 
-    }
-} 
-const boundaries = []
-const indoorBoundaries = []
 const oceans = []
-const offset = {
-    x: -450,
-    y: -600
-}
-
 oceanMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
         if (symbol == 0){
             oceans.push(new oceanTile({position:{
-                x: j * 48 + offset.x,
-                y: i * 48 + offset.y
+                x: j * 48 + offset.out.x,
+                y: i * 48 + offset.out.y
             }, image: waves, frames: {max:14}}))
         }
     })})
 
+
+////////////////////////
+const boundaries = []
 collisionsMapOutside.forEach((row, i) => {
     row.forEach((symbol, j) => {
         if (symbol == 856){
         boundaries.push(new Boundary({position: {
-            x: j * 48 +offset.x + 5,
-            y: i * 48 + offset.y 
+            x: j * 48 +offset.out.x + 5,
+            y: i * 48 + offset.out.y 
         }, width: 40, height: 40}))}
         else if (symbol == 1) {
         boundaries.push(new Boundary({position: {
-            x: j * 48 +offset.x +7,
-            y: i * 48 + offset.y 
+            x: j * 48 +offset.out.x +7,
+            y: i * 48 + offset.out.y 
         }, width: 2, height: 40}))}
-
         else if (symbol == 2) {
             boundaries.push(new Boundary({position: {
-                x: j * 48 +offset.x +5,
-                y: i * 48 + offset.y 
+                x: j * 48 +offset.out.x +5,
+                y: i * 48 + offset.out.y 
             }, width: 40, height: 2}))}
         else if (symbol == 3) {
         boundaries.push(new Boundary({position: {
-            x: j * 48 +offset.x + 38,
-            y: i * 48 + offset.y 
+            x: j * 48 +offset.out.x + 38,
+            y: i * 48 + offset.out.y 
         }, width: 2, height: 40}))}
-
         else if (symbol == 4) {
             boundaries.push(new Boundary({position: {
-                x: j * 48 +offset.x + 8,
-                y: i * 48 + offset.y 
+                x: j * 48 +offset.out.x + 8,
+                y: i * 48 + offset.out.y 
             }, width: 40, height: 2}))}
     })
 })
 
+////////////////////////
+const indoorBoundaries = []
 collisionsMapInside.forEach((row, i) => {
     row.forEach((symbol, j) => {
         if (symbol == 856){
         indoorBoundaries.push(new Boundary({position: {
-            x: j * 48 +offset.x -255,
-            y: i * 48 + offset.y -520
+            x: j * 48 +offset.in.x -5,
+            y: i * 48 + offset.in.y 
         }, width: 40, height: 40}))}
         if (symbol == 1){
             indoorBoundaries.push(new Boundary({position: {
-                x: j * 48 +offset.x -245,
-                y: i * 48 + offset.y -520
+                x: j * 48 +offset.in.x +5,
+                y: i * 48 + offset.in.y 
             }, width: 2, height: 40}))} 
         if (symbol == 2){
             indoorBoundaries.push(new Boundary({position: {
-                x: j * 48 +offset.x -232,
-                y: i * 48 + offset.y -520
+                x: j * 48 +offset.in.x +20,
+                y: i * 48 + offset.in.y 
             }, width: 2, height: 40}))}})})
 
 class Pokemon {
@@ -224,28 +198,41 @@ const poke = new Pokemon({
 })
 
 const background = new Sprite({position:{
-    x:offset.x,
-    y:offset.y
+    x:offset.out.x,
+    y:offset.out.y
 }, image: img})
 
 const foreground = new Sprite({position:{
-    x:offset.x,
-    y:offset.y +2
+    x:offset.out.x,
+    y:offset.out.y +2
 }, image: foreGround})
 
 const insideImage = new Image()
 
 
 insideImage.src = './img/inside.png'
+
+const doorImage = new Image()
+doorImage.src = './img/door.png'
 const insideBackground = new Sprite ({position:{
-    x:offset.x-260,
-    y:offset.y-520  
+    x:offset.in.x-10,
+    y:offset.in.y  
 }, image: insideImage}) 
 
-const testBoundary = new Boundary({position: {
-    x: 17 * 48 +offset.x  +40,
-    y: 20 * 48 + offset.y 
-}, width: 1, height: 40})
+const testBoundary = new descriptiveObject({position: {
+    x: 17 * 48 +offset.out.x  +40,
+    y: 20 * 48 + offset.out.y 
+}, width: 1, height: 40, text: "Lev's island"})
+
+const sign = new descriptiveObject({position: {
+    x: 28 * 48 +offset.out.x + 5,
+    y: 17 * 48 + offset.out.y -45
+}, width: 40, height: 2, text: "The Field of Flowers"})
+
+const mailbox = new descriptiveObject({position: {
+    x: 20 * 48 +offset.out.x + 10,
+    y: 15 * 48 + offset.out.y 
+}, width: 30, height: 2, text: "S + L \&#9829"})
 
 const keys = {
     ArrowUp: {
@@ -264,16 +251,30 @@ const keys = {
 
 
 const door = new Boundary({position: {
-    x: 19 * 48 +offset.x,
-    y: 13 * 48 + offset.y 
+    x: 19 * 48 +offset.out.x,
+    y: 13 * 48 + offset.out.y 
     
-}, width: 40, height: 42})
+}, width: 40, height: 45})
+
+const doorBoundary = new Boundary({
+    position: {
+        x: 19 * 48 +offset.out.x,
+        y: 14 * 48 + offset.out.y 
+    }, width: 40, height:40
+})
+const openingDoor = new Door({
+    position: {
+        x: 19 * 48 +offset.out.x,
+        y: 14 * 48 + offset.out.y 
+    }, image: doorImage, frames: {max: 4}, boundary: doorBoundary
+})
 const doorToOutside = new Boundary({position: {
-    x: 25 * 48 +offset.x -260,
-    y: 27 * 48 + offset.y -550
+    x: 25 * 48 +offset.in.x -10,
+    y: 27 * 48 + offset.in.y -30
     
 }, width: 40, height: 40})
-const movables = [background, ...boundaries, foreground, poke, ...oceans, insideBackground, ...indoorBoundaries, door, doorToOutside, testBoundary]
+const objects = [testBoundary, sign, mailbox]
+const movables = [background, ...boundaries, foreground, poke, ...oceans, insideBackground, ...indoorBoundaries, door, doorToOutside, openingDoor,...objects, doorBoundary]
 function rectangularCollision ({rectangle1, rectangle2}){
     return (
         rectangle1.position.x + rectangle1.width >= rectangle2.position.x && 
@@ -283,7 +284,15 @@ function rectangularCollision ({rectangle1, rectangle2}){
     )
 
 }
-
+function fade(){
+    gsap.to('#transitionImage', {
+        opacity: 0, duration:2, onComplete: function() {
+            // This code will execute when the animation is complete
+            console.log("Animation is complete");
+        
+    }}) 
+    
+}
 let isTextDisplayed = false;
 class outsideMap {
     draw(){
@@ -297,13 +306,17 @@ class outsideMap {
         boundaries.forEach(boundary => {
             boundary.draw()
         })
-        testBoundary.draw()
+        objects.forEach(boundary =>{
+            boundary.draw()
+        })
+      
         door.draw()
-        
+        openingDoor.draw()
         poke.draw()
         player.draw()
-    
+        
         foreground.draw()
+       
         let moving  =  true 
         player.moving = false
         if (keys.ArrowUp.pressed && lastKey=='ArrowUp'){
@@ -330,23 +343,44 @@ class outsideMap {
                     y: door.position.y +2
                 }}
             })){
+                gsap.to(('#transitionImage'), {
+                    opacity: 1, duration:1, onComplete: function(){fade()
+                        characterLocation.location = true
+                        player.image = player.sprites.down
+                        return
+                        } 
+                })
                 
-                characterLocation.location = true
-                player.image = player.sprites.down
-                return
             }
 
             if (rectangularCollision({
                 rectangle1: player,
-                rectangle2:{...testBoundary, position:{
-                    x: testBoundary.position.x,
-                    y: testBoundary.position.y +2
+                rectangle2:{...openingDoor.boundary, position:{
+                    x: openingDoor.boundary.position.x,
+                    y: openingDoor.boundary.position.y +2
                 }}
             })){
                 
-                moving = false
-                isTextDisplayed = true
+                openingDoor.close = true
+            }else{
+                openingDoor.close = false
             }
+            for (let i = 0; i < objects.length; i++){
+                const object = objects[i]
+                if (rectangularCollision({
+                    rectangle1: player,
+                    rectangle2:{...object, position:{
+                        x: object.position.x,
+                        y: object.position.y +2
+                    }}
+                })){
+                    
+                    moving = false
+                    isTextDisplayed = true
+                    object.display()
+                }
+            }
+           
             if (moving) {
                 // Player is moving, reset the flag
                 isTextDisplayed = false;
@@ -356,6 +390,7 @@ class outsideMap {
             })}
             
         } else if (keys.ArrowDown.pressed && lastKey=='ArrowDown'){
+            openingDoor.close = false
             player.moving = true
             player.image = player.sprites.down
             for(let i = 0; i< boundaries.length; i++){
@@ -372,17 +407,22 @@ class outsideMap {
                     break
                 }
             }
-            if (rectangularCollision({
-                rectangle1: player,
-                rectangle2:{...testBoundary, position:{
-                    x: testBoundary.position.x,
-                    y: testBoundary.position.y -2
-                }}
-            })){
-                
-                moving = false
-                isTextDisplayed = true
+            for (let i = 0; i < objects.length; i++){
+                const object = objects[i]
+                if (rectangularCollision({
+                    rectangle1: player,
+                    rectangle2:{...object, position:{
+                        x: object.position.x,
+                        y: object.position.y -2
+                    }}
+                })){
+                    
+                    moving = false
+                    isTextDisplayed = true
+                    object.display()
+                }
             }
+           
             if (moving) {
                 // Player is moving, reset the flag
                 isTextDisplayed = false;
@@ -407,17 +447,22 @@ class outsideMap {
                     break
                 }
             }
-            if (rectangularCollision({
-                rectangle1: player,
-                rectangle2:{...testBoundary, position:{
-                    x: testBoundary.position.x+2,
-                    y: testBoundary.position.y 
-                }}
-            })){
-                
-                moving = false
-                isTextDisplayed = true
+            for (let i = 0; i < objects.length; i++){
+                const object = objects[i]
+                if (rectangularCollision({
+                    rectangle1: player,
+                    rectangle2:{...object, position:{
+                        x: object.position.x +2,
+                        y: object.position.y 
+                    }}
+                })){
+                    
+                    moving = false
+                    isTextDisplayed = true
+                    object.display()
+                }
             }
+           
             if (moving) {
                 // Player is moving, reset the flag
                 isTextDisplayed = false;
@@ -441,22 +486,28 @@ class outsideMap {
                     moving = false
                     break
                 }
+            }
+            for (let i = 0; i < objects.length; i++){
+                const object = objects[i]
                 if (rectangularCollision({
                     rectangle1: player,
-                    rectangle2:{...testBoundary, position:{
-                        x: testBoundary.position.x-2,
-                        y: testBoundary.position.y 
+                    rectangle2:{...object, position:{
+                        x: object.position.x-2,
+                        y: object.position.y 
                     }}
                 })){
                     
                     moving = false
                     isTextDisplayed = true
+                    object.display()
                 }
+            }
+           
                 if (moving) {
                     // Player is moving, reset the flag
                     isTextDisplayed = false;
                 }
-            }
+            
             if (moving){movables.forEach((movable)=>{
                 movable.position.x -=2
             })}
@@ -465,14 +516,11 @@ class outsideMap {
         if (!moving) {
         player.frames.val = 0
         }
-        if (isTextDisplayed) {
-            document.querySelector('#textDiv').style.display = 'block';
-            document.querySelector('#dialogueBox').innerHTML = "Lev's island";
-          } else {
-            document.querySelector('#textDiv').style.display = 'none';
-            document.querySelector('#dialogueBox').innerHTML = "";
-        }
-       
+        
+        if (!isTextDisplayed) {
+          document.querySelector('#textDiv').style.display = 'none';
+          document.querySelector('#dialogueBox').innerHTML = "";
+      }
     }
 }
 
@@ -537,10 +585,14 @@ class insideMap {
                     y: doorToOutside.position.y +2
                 }}
             })){
-                
-                characterLocation.location = false
-                playerInside.image = playerInside.sprites.up
-                return
+                gsap.to(('#transitionImage'), {
+                    opacity: 1, duration:1, onComplete: function(){fade()
+                        characterLocation.location = false
+                        playerInside.image = playerInside.sprites.up
+                        return
+                        } 
+                })
+               
             }
             if (moving){movables.forEach((movable)=>{
                 movable.position.y -=2
@@ -600,6 +652,7 @@ function animate(){
 
 
     if (characterLocation.location == false){
+       
         outside.draw()
       
     }else if (characterLocation.location == true){
@@ -612,6 +665,10 @@ function animate(){
 }
 
 animate()
+
+
+
+
 
 let lastKey = ''
 window.addEventListener('keydown', (e) => {
