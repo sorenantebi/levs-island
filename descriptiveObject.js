@@ -25,8 +25,11 @@ class descriptiveObject {
             img.src = './img/textBox.png'
         }
         
-        document.querySelector('#textDiv').style.display = 'block';
-        document.querySelector('#dialogueBox').innerHTML = this.text;
+        img.onload = () =>{ 
+            document.querySelector('#textDiv').style.display = 'block';
+            document.querySelector('#dialogueBox').innerHTML = this.text;
+        }
+       
     }
 
 }
@@ -47,7 +50,8 @@ class descriptiveObjectInside extends descriptiveObject {
         } else {img2.style.backgroundImage = 'url(./img/largeFrame.png)'
         img2.style.width = '300px'
         img2.style.height = '400px'}
-        img2.style.display = 'block';
+        img.onload = () => {   img2.style.display = 'block';}
+     
     }
     
 }
