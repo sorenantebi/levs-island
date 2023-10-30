@@ -28,6 +28,6 @@ class descriptiveObjectInside extends descriptiveObject {
         const img = document.querySelector('#pixeledImage')
         img.src = this.source 
         document.querySelector('#largeBackground').style.display = 'block';
-
     }
+    
 }

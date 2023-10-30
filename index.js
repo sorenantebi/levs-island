@@ -296,12 +296,36 @@ const mailbox = new descriptiveObject({position: {
     y: 15 * 48 + offset.out.y 
 }, width: 30, height: 2, text: "S + L <br>\u2665"})
 
-const picture = new descriptiveObjectInside({
+const picture1 = new descriptiveObjectInside({
         position: {
             x: 26 * 48 +offset.in.x -3,
             y: 21 * 48 + offset.in.y +2
         }, width: 31, height: 1, source: './img/art.png'
      
+})
+
+const picture2 = new descriptiveObjectInside({
+    position: {
+        x: 23 * 48 +offset.in.x -3,
+        y: 21 * 48 + offset.in.y +2
+    }, width: 31, height: 1, source: './img/art2.png'
+ 
+})
+
+const picture3 = new descriptiveObjectInside({
+    position: {
+        x: 35 * 48 +offset.in.x -3,
+        y: 22 * 48 + offset.in.y +2
+    }, width: 31, height: 1, source: './img/art3.png'
+ 
+})
+
+const picture4 = new descriptiveObjectInside({
+    position: {
+        x: 30 * 48 +offset.in.x -3,
+        y: 14 * 48 + offset.in.y +2
+    }, width: 31, height: 1, source: './img/art4.png'
+ 
 })
 const keys = {
     ArrowUp: {
@@ -343,7 +367,7 @@ const doorToOutside = new Boundary({position: {
     
 }, width: 40, height: 40})
 const objects = [testBoundary, sign, mailbox]
-const insideObjects = [picture]
+const insideObjects = [picture1, picture2, picture3, picture4]
 const movables = [background, ...boundaries, foreground, poke, ...oceans, insideBackground, ...indoorBoundaries, door, doorToOutside, openingDoor,...objects, doorBoundary, insideForeground, ...insideObjects]
 function rectangularCollision ({rectangle1, rectangle2}){
     return (
@@ -812,6 +836,7 @@ class insideMap {
             document.querySelector('#textDiv').style.display = 'none';
             document.querySelector('#dialogueBox').innerHTML = "";
             document.querySelector('#largeBackground').style.display = 'none';
+            document.querySelector('#pixeledImage').src = '';
         }
 
     }
