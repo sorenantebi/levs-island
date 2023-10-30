@@ -4,7 +4,6 @@ canvas.width = 1024
 canvas.height = 576 
 
 
-
 function fadeOut (){
     gsap.to('#titlePage', {
         opacity: 0, duration:2,  delay: 0.5
@@ -19,9 +18,8 @@ gsap.fromTo('#titlePage',{opacity: 0}, {
 const collisionsMapOutside = []
 for (let i = 0; i < collisions.length; i+=50){
     collisionsMapOutside.push(collisions.slice(i, i + 50))
-  
-
 }
+
 const collisionsMapInside = []
 for (let i =0; i < indoorCollisions.length; i +=50){
     collisionsMapInside.push(indoorCollisions.slice(i,i+50))
@@ -41,7 +39,7 @@ class Boundary {
     }
 
     draw(){
-        c.fillStyle = "red"//"rgba(255, 0,0,0)"
+        c.fillStyle = "rgba(255, 0,0,0)"
         c.fillRect(this.position.x, this.position.y, this.width, this.height)
     }
 }
