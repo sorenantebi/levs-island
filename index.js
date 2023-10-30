@@ -177,14 +177,58 @@ collisionsMapInside.forEach((row, i) => {
                 y: i * 48 + offset.in.y 
             }, width: 44, height: 40}))}
         })})
-            
+//////////////////
+class NPC {
+    constructor({position, sprite}){
+       
+        this.position = position
+        this.sprite = sprite
+    }
+}           
 class Pokemon {
     constructor({image, position}){
         this.position = position
         this.image = image
+        this.width = this.image.width
+        this.height = this.image.height
+        this.next = 'right'
+        this.elapsed = 0
+        this.moving = true
+
     }
+    update(){
+        this.elapsed++
+        
+            if (this.next == 'right') {
+                this.position.x+=1
+                if (this.elapsed % 50 == 0) {
+                    this.next = 'up'
+                }
+            } else if (this.next == 'up' ){
+                this.position.y-=1
+                if (this.elapsed % 50 == 0) {
+                    this.next = 'left'
+                }
+            } else if (this.next == 'left'){
+                this.position.x-=1
+                if (this.elapsed % 50 == 0) {
+                    this.next = 'down'
+                }
+            } else if (this.next =='down'){
+                this.position.y +=1
+                if (this.elapsed % 50 == 0) {
+                    this.next = 'right'
+                }
+            }
+        }
+        
+        
+        
+    
     draw(){
        c.drawImage(this.image, this.position.x , this.position.y)
+       c.fillStyle = "rgba(255,0,0,0)"
+       c.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
 }
 const img = new Image()
@@ -475,12 +519,14 @@ class outsideMap {
         door.draw()
         openingDoor.draw()
         poke.draw()
+
         player.draw()
         
         foreground.draw()
-       
+        poke.update()
         let moving  =  true 
         player.moving = false
+
         if (keys.ArrowUp.pressed && lastKey=='ArrowUp'){
             player.moving = true
             player.image = player.sprites.up
@@ -587,7 +633,16 @@ class outsideMap {
                     object.display()
                 }
             }
-           
+            if (rectangularCollision({
+                rectangle1: player,
+                rectangle2:{...poke, position:{
+                    x: poke.position.x,
+                    y: poke.position.y +2
+                }}
+            })){
+                console.log('colliding with poke!')
+                moving = false
+            }
             if (moving) {
                 // Player is moving, reset the flag
                 isTextDisplayed = false;
@@ -677,7 +732,7 @@ class outsideMap {
                 movable.position.x -=2
             })}
         } 
-
+        
         if (!moving) {
             player.frames.val = 0
 
