@@ -289,18 +289,54 @@ const testBoundary = new descriptiveObject({position: {
 const sign = new descriptiveObject({position: {
     x: 28 * 48 +offset.out.x + 5,
     y: 17 * 48 + offset.out.y -45
-}, width: 40, height: 2, text: "The Field of Flowers \u2740 \u273F"})
+}, width: 40, height: 2, text: "The Field of Flowers <br>\u2740 \u273F"})
 
+const fireplace = new descriptiveObject({position: {
+    x: 32 * 48 +offset.in.x,
+    y: 14 * 48 + offset.in.y 
+}, width: 80, height: 41, text: "A Cozy Fireplace <br> \u2766 "})
+
+const tv = new descriptiveObject({position: {
+    x: 33 * 48 +offset.in.x + 20,
+    y: 22 * 48 + offset.in.y +2
+}, width: 35, height: 1, text: "* click * <br> ... One Piece is playing! ...", speechBubble:true})
+const cooking = new descriptiveObject({position: {
+    x: 17 * 48 +offset.in.x,
+    y: 15 * 48 + offset.in.y
+}, width: 70, height: 5, text: "Should I have maccies or spagbol tonight?", speechBubble:true})
+
+const ramen = new descriptiveObject({position: {
+    x: 25 * 48 +offset.in.x,
+    y: 16 * 48 + offset.in.y +5
+}, width: 25, height: 1, text: "I love ramen!", speechBubble:true})
+
+const phone = new descriptiveObject({position: {
+    x: 24 * 48 +offset.in.x -3,
+    y: 16 * 48 + offset.in.y +5
+}, width: 20, height: 1, text: "Levypvy's LP grind never stops! <br> Currently: 1925 elo", speechBubble:true})
 const mailbox = new descriptiveObject({position: {
     x: 20 * 48 +offset.out.x + 10,
     y: 15 * 48 + offset.out.y 
 }, width: 30, height: 2, text: "S + L <br>\u2665"})
+const bed = new descriptiveObject({position: {
+    x: 21 * 48 +offset.in.x +20,
+    y: 25 * 48 + offset.in.y +20
+}, width: 40, height: 60, name:'bed', speechBubble: true, text: "I'm...so eepy..."})
+const notebook = new notebookObject({position: {
+    x: 25 * 48 +offset.in.x,
+    y: 21 * 48 + offset.in.y +4
+}, width: 25, height: 37, text: "Things I like about Levia <br> <br> - smart <br> - funny <br> - hot <br> - everything"})
+
+const book = new bookObject({position: {
+    x: 15 * 48 +offset.in.x + 5,
+    y: 19 * 48 + offset.in.y +38
+}, width: 30, height: 2, text: "Dear Levia, <br> you're the best. <br> I'll always be missing you <br> ~ soren \u2665"})
 
 const picture1 = new descriptiveObjectInside({
         position: {
             x: 26 * 48 +offset.in.x -3,
             y: 21 * 48 + offset.in.y +2
-        }, width: 31, height: 1, source: './img/art.png'
+        }, width: 31, height: 1, source: './img/art3.png'
      
 })
 
@@ -316,7 +352,7 @@ const picture3 = new descriptiveObjectInside({
     position: {
         x: 35 * 48 +offset.in.x -3,
         y: 22 * 48 + offset.in.y +2
-    }, width: 31, height: 1, source: './img/art3.png'
+    }, width: 31, height: 1, source: './img/art.png'
  
 })
 
@@ -327,6 +363,30 @@ const picture4 = new descriptiveObjectInside({
     }, width: 31, height: 1, source: './img/art4.png'
  
 })
+
+const picture5 = new descriptiveObjectInside({
+    position: {
+        x: 20 * 48 +offset.in.x -3,
+        y: 14 * 48 + offset.in.y +2
+    }, width: 80, height: 40, source: './img/art5.png', horizontal: true
+ 
+})
+const picture6 = new descriptiveObjectInside({
+    position: {
+        x: 21 * 48 +offset.in.x -3,
+        y: 21 * 48 + offset.in.y +2
+    }, width: 80, height: 1, source: './img/art6.png', horizontal: true
+ 
+})
+const bookshelf1 = new descriptiveObject({position: {
+    x: 17 * 48 +offset.in.x,
+    y: 20 * 48 + offset.in.y 
+}, width: 80, height: 2, text:"Textbooks on how to \n cope with being \n extremely attractive" })
+const bookshelf2 = new descriptiveObject({position: {
+    x: 13 * 48 +offset.in.x -3,
+    y: 20 * 48 + offset.in.y 
+}, width: 75, height: 2, text:"Virology textbooks" })
+
 const keys = {
     ArrowUp: {
         pressed: false
@@ -367,7 +427,7 @@ const doorToOutside = new Boundary({position: {
     
 }, width: 40, height: 40})
 const objects = [testBoundary, sign, mailbox]
-const insideObjects = [picture1, picture2, picture3, picture4]
+const insideObjects = [picture1, picture2, picture3, picture4, picture5, picture6, bookshelf1, bookshelf2, fireplace, tv, ramen,phone, notebook, cooking, book, bed]
 const movables = [background, ...boundaries, foreground, poke, ...oceans, insideBackground, ...indoorBoundaries, door, doorToOutside, openingDoor,...objects, doorBoundary, insideForeground, ...insideObjects]
 function rectangularCollision ({rectangle1, rectangle2}){
     return (
@@ -632,7 +692,7 @@ class outsideMap {
 
 const outside = new outsideMap()
 
-
+let isBed = false
 
 class insideMap {
     draw(){
@@ -677,14 +737,25 @@ class insideMap {
                         y: object.position.y +2
                     }}
                 })){
+                    if (object.name == 'bed'){
+                        isTextDisplayed = true
+                        isBed = true
+                        object.display()
+                     
+                    } else {
+                        moving = false
+                        isTextDisplayed = true
+                        isBed = false
+                        object.display()
+                        break
+                    }
                     
-                    moving = false
-                    isTextDisplayed = true
-                    object.display()
+                } else {
+                    isTextDisplayed = false
                 }
             }
            
-            if (moving) {
+            if (moving && !isBed) {
                 // Player is moving, reset the flag
                 isTextDisplayed = false;
             }
@@ -718,10 +789,20 @@ class insideMap {
                         y: object.position.y -2
                     }}
                 })){
+                    if (object.name == 'bed'){
+                        isTextDisplayed = true
+                        isBed = true
+                        object.display()
+                       
+                    } else {
+                        moving = false
+                        isTextDisplayed = true
+                        isBed = false
+                        object.display()
+                    break}
                     
-                    moving = false
-                    isTextDisplayed = true
-                    object.display()
+                }else {
+                    isTextDisplayed = false
                 }
             }
             if (rectangularCollision({
@@ -742,7 +823,7 @@ class insideMap {
                 })
                
             }
-            if (moving) {
+            if (moving && !isBed) {
                 // Player is moving, reset the flag
                 isTextDisplayed = false;
             }
@@ -776,12 +857,23 @@ class insideMap {
                     }}
                 })){
                     
-                    moving = false
-                    isTextDisplayed = true
-                    object.display()
+                    if (object.name == 'bed'){
+                        isTextDisplayed = true
+                        isBed = true
+                        object.display()
+                        
+                    } else {
+                        moving = false
+                        isTextDisplayed = true
+                        isBed = false
+                        object.display()
+                    break}
+                    
+                }else {
+                    isTextDisplayed = false
                 }
             }
-            if (moving) {
+            if (moving && !isBed) {
                 // Player is moving, reset the flag
                 isTextDisplayed = false;
             }
@@ -815,12 +907,23 @@ class insideMap {
                     }}
                 })){
                     
-                    moving = false
-                    isTextDisplayed = true
-                    object.display()
+                    if (object.name == 'bed'){
+                        isTextDisplayed = true
+                        isBed = true
+                        object.display()
+                        
+                    } else {
+                        moving = false
+                        isTextDisplayed = true
+                        isBed = false
+                        object.display()
+                    break}
+                    
+                }else {
+                    isTextDisplayed = false
                 }
             }
-            if (moving) {
+            if (moving && !isBed) {
                 // Player is moving, reset the flag
                 isTextDisplayed = false;
             }
@@ -832,11 +935,16 @@ class insideMap {
         if (!moving) {
             playerInside.frames.val = 0
         }
+        
         if (!isTextDisplayed) {
             document.querySelector('#textDiv').style.display = 'none';
             document.querySelector('#dialogueBox').innerHTML = "";
             document.querySelector('#largeBackground').style.display = 'none';
             document.querySelector('#pixeledImage').src = '';
+            document.querySelector('#notebook').style.display = 'none';
+            document.querySelector('#notebookDialogue').innerHTML = "";
+            document.querySelector('#book').style.display = 'none';
+            document.querySelector('#bookDialogue').innerHTML = '';
         }
 
     }
