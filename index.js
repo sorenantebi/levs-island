@@ -186,50 +186,110 @@ class NPC {
     }
 }           
 class Pokemon {
-    constructor({image, position}){
+    constructor({image, position, frames = {max: 1}, sprites}){
         this.position = position
         this.image = image
-        this.width = this.image.width
-        this.height = this.image.height
+        this.width = this.image.width*0.7
+        this.height = this.image.height*0.7
         this.next = 'right'
-        this.elapsed = 0
         this.moving = true
+        this.frames = {...frames, val: 0, elapsed: 0}
+
+        this.image.onload = () =>{
+            this.width = this.image.width / this.frames.max
+            this.height = this.image.height
+        }
+        this.sprites = sprites 
+        this.speechBubble = true
+       
 
     }
     update(){
-        this.elapsed++
+        if (this.moving){
+            if (this.frames.max >1) {
+                this.frames.elapsed ++
+            }
         
             if (this.next == 'right') {
                 this.position.x+=1
-                if (this.elapsed % 50 == 0) {
+                
+                if (this.frames.elapsed % 15 == 0){
+                    if (this.frames.val < this.frames.max - 1) this.frames.val++
+                    else this.frames.val = 0
+                }
+                if (this.frames.elapsed %75 == 0) {
+                    this.image = pokeUp
                     this.next = 'up'
                 }
             } else if (this.next == 'up' ){
                 this.position.y-=1
-                if (this.elapsed % 50 == 0) {
+                
+                if (this.frames.elapsed % 15 == 0){
+                    if (this.frames.val < this.frames.max - 1) this.frames.val++
+                    else this.frames.val = 0
+                }
+                if (this.frames.elapsed % 75 == 0) {
                     this.next = 'left'
+                    this.image = pokeLeft
                 }
             } else if (this.next == 'left'){
                 this.position.x-=1
-                if (this.elapsed % 50 == 0) {
+               
+                if (this.frames.elapsed % 15 == 0){
+                    if (this.frames.val < this.frames.max - 1) this.frames.val++
+                    else this.frames.val = 0
+                }
+                if (this.frames.elapsed % 75 == 0) {
+                    this.image=pokeDown
                     this.next = 'down'
                 }
             } else if (this.next =='down'){
                 this.position.y +=1
-                if (this.elapsed % 50 == 0) {
+                
+                if (this.frames.elapsed % 15 == 0){
+                    if (this.frames.val < this.frames.max - 1) this.frames.val++
+                    else this.frames.val = 0
+                }
+                if (this.frames.elapsed %75 == 0) {
+                    this.image = pokeRight
                     this.next = 'right'
                 }
             }
         }
         
-        
+    }
         
     
     draw(){
-       c.drawImage(this.image, this.position.x , this.position.y)
+     /*   c.drawImage(this.image, this.position.x , this.position.y)
        c.fillStyle = "rgba(255,0,0,0)"
        c.fillRect(this.position.x, this.position.y, this.width, this.height);
+ */
+       c.drawImage(this.image,
+        this.frames.val * this.width,
+        0,
+        this.image.width/ this.frames.max,
+        this.image.height,
+        this.position.x,
+        this.position.y,
+        this.image.width / this.frames.max,
+        this.image.height)
     }
+    sound(){
+        const img = document.querySelector('#textBox')
+        if (this.speechBubble){
+            img.src = './img/speechBubble.png'
+        } else {
+            img.src = './img/textBox.png'
+        }
+        
+        img.onload = () =>{ 
+            document.querySelector('#textDiv').style.display = 'block';
+            document.querySelector('#dialogueBox').innerHTML = 'AZUUUUUUUU';
+        }
+    }
+
+   
 }
 const img = new Image()
 img.src = './img/pokemon.png'
@@ -238,7 +298,15 @@ const foreGround = new Image()
 foreGround.src = './img/foreground.png'
 
 const azu = new Image()
-azu.src = './img/asu.png'
+azu.src = './img/azuDown.png'
+const pokeDown = new Image()
+pokeDown.src = './img/azuDown.png'
+const pokeUp = new Image()
+pokeUp.src = './img/azuUp.png'
+const pokeLeft = new Image()
+pokeLeft.src = './img/azuLeft.png'
+const pokeRight = new Image()
+pokeRight.src = './img/azuRight.png'
 
 const playerDown = new Image()
 playerDown.src = './img/lev.png'
@@ -291,9 +359,15 @@ const playerInside = new Sprite ({
 const poke = new Pokemon({
     position: {
         x: 450,
-        y: 650
+        y: 700
     },
-    image: azu
+    image: azu, frames: {max:2},
+    sprites: {
+        up: pokeUp,
+        down: pokeDown,
+        left: pokeLeft,
+        right: pokeRight
+    } 
 })
 
 const background = new Sprite({position:{
@@ -303,7 +377,7 @@ const background = new Sprite({position:{
 
 const foreground = new Sprite({position:{
     x:offset.out.x,
-    y:offset.out.y +2
+    y:offset.out.y 
 }, image: foreGround})
 
 const insideImage = new Image()
@@ -518,15 +592,47 @@ class outsideMap {
       
         door.draw()
         openingDoor.draw()
-        poke.draw()
+        
 
         player.draw()
         
         foreground.draw()
+        poke.draw() 
         poke.update()
         let moving  =  true 
         player.moving = false
 
+        if (rectangularCollision({
+            rectangle1: poke,
+            rectangle2: { ...player, position: {
+                x: player.position.x,
+                y: player.position.y + 1
+            }}
+        }) || rectangularCollision({
+            rectangle1: poke,
+            rectangle2: { ...player, position: {
+                x: player.position.x,
+                y: player.position.y - 1
+            }}
+        }) || rectangularCollision({
+            rectangle1: poke,
+            rectangle2: { ...player, position: {
+                x: player.position.x + 1,
+                y: player.position.y
+            }}
+        }) || rectangularCollision({
+            rectangle1: poke,
+            rectangle2: { ...player, position: {
+                x: player.position.x - 1,
+                y: player.position.y
+            }}
+        })) {
+            console.log('MESSAGE!');
+            poke.moving = false;
+        } else {
+            //isTextDisplayed=false
+            poke.moving = true;
+        }
         if (keys.ArrowUp.pressed && lastKey=='ArrowUp'){
             player.moving = true
             player.image = player.sprites.up
@@ -576,6 +682,22 @@ class outsideMap {
             }else{
                 openingDoor.close = false
             }
+            
+            if (rectangularCollision({
+                rectangle1: player,
+                rectangle2:{...poke, position:{
+                    x: poke.position.x,
+                    y: poke.position.y +10
+                }}
+            })){
+                console.log('colliding with poke!')
+                isTextDisplayed = true
+                poke.sound()
+                moving = false
+            }else {
+                isTextDisplayed = false
+            }
+
             for (let i = 0; i < objects.length; i++){
                 const object = objects[i]
                 if (rectangularCollision({
@@ -591,7 +713,7 @@ class outsideMap {
                     object.display()
                 }
             }
-           
+
             if (moving) {
                 // Player is moving, reset the flag
                 isTextDisplayed = false;
@@ -618,6 +740,22 @@ class outsideMap {
                     break
                 }
             }
+            
+            if (rectangularCollision({
+                rectangle1: player,
+                rectangle2:{...poke, position:{
+                    x: poke.position.x,
+                    y: poke.position.y -10
+                }}
+            })){
+                console.log('colliding with poke!')
+                isTextDisplayed = true
+                poke.sound()
+                moving = false
+            }else{
+                isTextDisplayed = false
+            }
+
             for (let i = 0; i < objects.length; i++){
                 const object = objects[i]
                 if (rectangularCollision({
@@ -632,16 +770,6 @@ class outsideMap {
                     isTextDisplayed = true
                     object.display()
                 }
-            }
-            if (rectangularCollision({
-                rectangle1: player,
-                rectangle2:{...poke, position:{
-                    x: poke.position.x,
-                    y: poke.position.y +2
-                }}
-            })){
-                console.log('colliding with poke!')
-                moving = false
             }
             if (moving) {
                 // Player is moving, reset the flag
@@ -667,6 +795,21 @@ class outsideMap {
                     break
                 }
             }
+            
+            if (rectangularCollision({
+                rectangle1: player,
+                rectangle2:{...poke, position:{
+                    x: poke.position.x+10,
+                    y: poke.position.y 
+                }}
+            })){
+                console.log('colliding with poke!')
+                isTextDisplayed = true
+                poke.sound()
+                moving = false
+            }else{
+                isTextDisplayed = false
+            }
             for (let i = 0; i < objects.length; i++){
                 const object = objects[i]
                 if (rectangularCollision({
@@ -682,7 +825,6 @@ class outsideMap {
                     object.display()
                 }
             }
-           
             if (moving) {
                 // Player is moving, reset the flag
                 isTextDisplayed = false;
@@ -707,6 +849,21 @@ class outsideMap {
                     break
                 }
             }
+            
+            if (rectangularCollision({
+                rectangle1: player,
+                rectangle2:{...poke, position:{
+                    x: poke.position.x-10,
+                    y: poke.position.y 
+                }}
+            })){
+                console.log('colliding with poke!')
+                isTextDisplayed = true
+                poke.sound()
+                moving = false
+            }else {
+                isTextDisplayed = false
+            }
             for (let i = 0; i < objects.length; i++){
                 const object = objects[i]
                 if (rectangularCollision({
@@ -722,7 +879,6 @@ class outsideMap {
                     object.display()
                 }
             }
-           
                 if (moving) {
                     // Player is moving, reset the flag
                     isTextDisplayed = false;

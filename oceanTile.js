@@ -1,4 +1,4 @@
-class oceanTile {
+class oceanTile{
     constructor({ position, image, frames = { max: 1 } }) {
         this.position = position;
         this.image = image;
