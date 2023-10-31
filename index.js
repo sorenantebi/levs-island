@@ -184,118 +184,19 @@ collisionsMapInside.forEach((row, i) => {
             }, width: 44, height: 40}))}
         })})
 //////////////////
-class NPC {
+/* class NPC {
     constructor({position, sprite}){
        
         this.position = position
         this.sprite = sprite
     }
-}           
-class Pokemon {
-    constructor({image, position, frames = {max: 1}, sprites}){
-        this.position = position
-        this.image = image
-        this.width = this.image.width*0.7
-        this.height = this.image.height*0.7
-        this.next = 'right'
-        this.moving = true
-        this.frames = {...frames, val: 0, elapsed: 0}
-
-        this.image.onload = () =>{
-            this.width = this.image.width / this.frames.max
-            this.height = this.image.height
-        }
-        this.sprites = sprites 
-        this.speechBubble = true
-       
-
+}          */  
+class puzzlePiece extends descriptiveObject{
+    constructor({position, width, height, text, name = '', next, start}){
+        super(position = position, width=width,height=height,text=text, name=name)
+        this.next = next
+        this.start = start
     }
-    update(){
-        if (this.moving){
-            if (this.frames.max >1) {
-                this.frames.elapsed ++
-            }
-        
-            if (this.next == 'right') {
-                this.position.x+=1
-                
-                if (this.frames.elapsed % 15 == 0){
-                    if (this.frames.val < this.frames.max - 1) this.frames.val++
-                    else this.frames.val = 0
-                }
-                if (this.frames.elapsed %75 == 0) {
-                    this.image = pokeUp
-                    this.next = 'up'
-                }
-            } else if (this.next == 'up' ){
-                this.position.y-=1
-                
-                if (this.frames.elapsed % 15 == 0){
-                    if (this.frames.val < this.frames.max - 1) this.frames.val++
-                    else this.frames.val = 0
-                }
-                if (this.frames.elapsed % 75 == 0) {
-                    this.next = 'left'
-                    this.image = pokeLeft
-                }
-            } else if (this.next == 'left'){
-                this.position.x-=1
-               
-                if (this.frames.elapsed % 15 == 0){
-                    if (this.frames.val < this.frames.max - 1) this.frames.val++
-                    else this.frames.val = 0
-                }
-                if (this.frames.elapsed % 75 == 0) {
-                    this.image=pokeDown
-                    this.next = 'down'
-                }
-            } else if (this.next =='down'){
-                this.position.y +=1
-                
-                if (this.frames.elapsed % 15 == 0){
-                    if (this.frames.val < this.frames.max - 1) this.frames.val++
-                    else this.frames.val = 0
-                }
-                if (this.frames.elapsed %75 == 0) {
-                    this.image = pokeRight
-                    this.next = 'right'
-                }
-            }
-        }
-        
-    }
-        
-    
-    draw(){
-     /*   c.drawImage(this.image, this.position.x , this.position.y)
-       c.fillStyle = "rgba(255,0,0,0)"
-       c.fillRect(this.position.x, this.position.y, this.width, this.height);
- */
-       c.drawImage(this.image,
-        this.frames.val * this.width,
-        0,
-        this.image.width/ this.frames.max,
-        this.image.height,
-        this.position.x,
-        this.position.y,
-        this.image.width / this.frames.max,
-        this.image.height)
-    }
-    sound(){
-        const img = document.querySelector('#textBox')
-        if (this.speechBubble){
-            img.src = './img/speechBubble.png'
-        } else {
-            img.src = './img/textBox.png'
-        }
-        
-        img.onload = () =>{ 
-            document.querySelector('#textDiv').style.display = 'block';
-            document.querySelector('#dialogueBox').innerHTML = 'AZUUUUUUUU';
-        }
-    }
-
-   
 }
 const img = new Image()
 img.src = './img/pokemon.png'
