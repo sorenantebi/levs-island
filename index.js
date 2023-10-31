@@ -3,15 +3,21 @@ const c =canvas.getContext('2d')
 canvas.width = 1024
 canvas.height = 576 
 
+gsap.fromTo('#MAIN',{opacity: 0}, {
+    opacity: 1, duration:2, onComplete: starting
+}) 
 
 function fadeOut (){
     gsap.to('#titlePage', {
         opacity: 0, duration:2,  delay: 0.5
     }) 
 }
-gsap.fromTo('#titlePage',{opacity: 0}, {
-    opacity: 1, duration:2, onComplete: fadeOut
-}) 
+function starting(){
+    gsap.fromTo('#titlePage',{opacity: 0}, {
+        opacity: 1, duration:2, onComplete: fadeOut
+    }) 
+}
+
 
 
 
@@ -421,7 +427,7 @@ const tv = new descriptiveObject({position: {
 const cooking = new descriptiveObject({position: {
     x: 17 * 48 +offset.in.x,
     y: 15 * 48 + offset.in.y
-}, width: 70, height: 5, text: "Should I have maccies or spagbol tonight?", speechBubble:true})
+}, width: 70, height: 5, text: "Im craving maccies...", speechBubble:true})
 
 const ramen = new descriptiveObject({position: {
     x: 25 * 48 +offset.in.x,
