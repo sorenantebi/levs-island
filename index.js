@@ -1247,17 +1247,19 @@ const myOtherDiv = document.querySelector('#skip')
 const imageElement = document.querySelector('#image')
 let songIndex = 0
 const songs = [
-    './audio/BlankSpace.mp3',
     './audio/LookWhatYouMadeMeDo.mp3',
-    './audio/LoveStory.mp3',
-    './audio/BadBlood.mp3',
     './audio/CruelSummer.mp3',
+    './audio/LoveStory.mp3',
+    './audio/ReadyForIt.mp3',
+    './audio/BlankSpace.mp3',
+    './audio/BadBlood.mp3',
     './audio/Style.mp3',
     './audio/AntiHero.mp3',
     './audio/OutOfTheWoods.mp3',
     './audio/Karma.mp3',
-    './audio/IKnewYouWereTrouble.mp3'
-
+    './audio/IKnewYouWereTrouble.mp3',
+    './audio/YouAreInLove.mp3',
+    
 ]
 
 let isPlaying = false;
@@ -1340,4 +1342,3 @@ myOtherDiv.addEventListener('click', () => {
     console.log('Div was clicked!');
     playNextSong()
 })
-// do bed like battle zone, with text
