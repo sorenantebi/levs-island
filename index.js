@@ -586,22 +586,24 @@ class outsideMap {
         background.draw()
    
         c.imageSmoothingEnabled = false
-        oceans.forEach(ocean => {
-            ocean.draw()
-        }) 
+        
         boundaries.forEach(boundary => {
             boundary.draw()
         })
         objects.forEach(boundary =>{
             boundary.draw()
         })
-      
+        oceans.forEach(ocean => {
+            ocean.draw()
+        }) 
         door.draw()
         openingDoor.draw()
         
 
         player.draw()
         
+       
+       
         foreground.draw()
         poke.draw() 
         poke.update()

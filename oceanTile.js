@@ -13,10 +13,10 @@ class oceanTile{
             0,
             this.image.width / this.frames.max,
             this.image.height,
-            this.position.x - 1,
-            this.position.y - 1,
+            this.position.x ,
+            this.position.y ,
             this.image.width / this.frames.max + 2,
-            this.image.height + 2);
+            this.image.height );
 
         if (this.frames.max > 1) {
             this.frames.elapsed++;
