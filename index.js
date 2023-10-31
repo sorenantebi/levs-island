@@ -4,7 +4,7 @@ canvas.width = 1024
 canvas.height = 576 
 
 gsap.fromTo('#MAIN',{opacity: 0}, {
-    opacity: 1, duration:2, onComplete: starting
+    delay: 1, opacity: 1, duration:1, onComplete: starting
 }) 
 
 function fadeOut (){
