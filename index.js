@@ -64,7 +64,7 @@ oceanMap.forEach((row, i) => {
 })
 
 
-////////////////////////
+/////////////////////////
 const boundaries = []
 collisionsMapOutside.forEach((row, i) => {
     row.forEach((symbol, j) => {
