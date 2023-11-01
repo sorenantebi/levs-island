@@ -1,74 +1,87 @@
-
 <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         * {
-            font-family:'Press Start 2P', cursive;
+            font-family: 'Press Start 2P', cursive;
         }
-        body{
+
+        body {
             background-color: black;
         }
     </style>
 </head>
 
 <div id="MAIN" style="display: inline-block; position: relative; opacity: 0;">
-    <div id="transitionImage" style="background-color: black; position: absolute; top: 0; bottom: 0; left: 0; right: 0; pointer-events: none; opacity: 0;"></div>
+    <div id="transitionImage"
+        style="background-color: black; position: absolute; top: 0; bottom: 0; left: 0; right: 0; pointer-events: none; opacity: 0;">
+    </div>
     <div id="overlapping" style="background-image: url('./img/bground.png'); position: absolute; top: 4; right: 4; width: 64; height: 64; text-align: center;   display: flex;
     align-items: center;
-    justify-content: center;">  
-        <img id="image" src="./img/speakerOff.png" alt="Image" >
+    justify-content: center;">
+        <img id="image" src="./img/speakerOff.png" alt="Image">
     </div>
     <div id="skip" style="background-image: url('./img/bground.png'); width: 64; height: 64; position: absolute; top: 72; right: 4; text-align: center;   display: flex;
     align-items: center;
     justify-content: center;">
-        <img id="skipButton" src="./img/skipButton.png" alt="Image" >
+        <img id="skipButton" src="./img/skipButton.png" alt="Image">
     </div>
     <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; text-align: center; align-items: center; display: flex;
-    justify-content: center;"> 
+    justify-content: center;">
         <img id="titlePage" src="./img/titlePage.png" alt="Image" style="opacity: 0;">
-      </div>
-      <div id="largeBackground" style="background-image: url('./img/largeFrame.png'); width: 400px; height: 533px; position: absolute; 
+    </div>
+    <div id="largeBackground" style="background-image: url('./img/largeFrame.png'); width: 400px; height: 533px; position: absolute; 
       top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; display: none; 
-      "> 
-            <div style="width: 100%; height: 100%; text-align: center; align-items: center; display: flex;
+      ">
+        <div style="width: 100%; height: 100%; text-align: center; align-items: center; display: flex;
             justify-content: center;">
-                <img id="pixeledImage" src="" alt="Image ">
-            </div>
+            <img id="pixeledImage" src="" alt="Image ">
         </div>
+    </div>
     <canvas></canvas>
-    <div id="textDiv" style="position: absolute; left: 50%; bottom: 4; transform: translate(-50%);  text-align: center; display: none;"> 
-        <img id="textBox" src="" alt="Image" >
-        <div  id="dialogueBox" style="width: 100%; position: absolute; left: 50%;  top: 50%; transform: translate(-50%, -50%);   text-align: center;font-size: 16px;">
-      
+    <div id="textDiv"
+        style="position: absolute; left: 50%; bottom: 4; transform: translate(-50%);  text-align: center; display: none;">
+        <img id="textBox" src="" alt="Image">
+        <div id="dialogueBox"
+            style="width: 100%; position: absolute; left: 50%;  top: 50%; transform: translate(-50%, -50%);   text-align: center;font-size: 16px;">
+
         </div>
 
     </div>
-    <div id="notebook" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);  text-align: center; display: none;"> 
-        <img id="notebookPaper" src="./img/notebook.png" alt="Image" >
-        <div  id="notebookDialogue" style="width: 100%; position: absolute; left: 25;  top: 20;  font-size: 11px; text-align: left;">
-      
+    <div id="notebook"
+        style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);  text-align: center; display: none;">
+        <img id="notebookPaper" src="./img/notebook.png" alt="Image">
+        <div id="notebookDialogue"
+            style="width: 100%; position: absolute; left: 25;  top: 20;  font-size: 11px; text-align: left;">
+
         </div>
 
     </div>
-    <div id="book" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);  text-align: center; display: none;"> 
-        <img id="bookPaper" src="./img/book.png" alt="Image" >
-        <div  id="bookDialogue" style="width: 25%; position: absolute; left: 175;  top: 15;  font-size: 6.5px; text-align: left;">
-      
+    <div id="book"
+        style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);  text-align: center; display: none;">
+        <img id="bookPaper" src="./img/book.png" alt="Image">
+        <div id="bookDialogue"
+            style="width: 25%; position: absolute; left: 175;  top: 15;  font-size: 6.5px; text-align: left;">
+
         </div>
-        
+
 
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js" integrity="sha512-H6cPm97FAsgIKmlBA4s774vqoN24V5gSQL4yBTDOY2su2DeXZVhQPxFK4P6GPdnZqM9fg1G3cMv5wD7e6cFLZQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js" integrity="sha512-6+YN/9o9BWrk6wSfGxQGpt3EUK6XeHi6yeHV+TYD2GR0Sj/cggRpXr1BrAQf0as6XslxomMUxXp2vIl+fv0QRA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"
+    integrity="sha512-H6cPm97FAsgIKmlBA4s774vqoN24V5gSQL4yBTDOY2su2DeXZVhQPxFK4P6GPdnZqM9fg1G3cMv5wD7e6cFLZQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"
+    integrity="sha512-6+YN/9o9BWrk6wSfGxQGpt3EUK6XeHi6yeHV+TYD2GR0Sj/cggRpXr1BrAQf0as6XslxomMUxXp2vIl+fv0QRA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="audio.js"></script>
-<script src="descriptiveObject.js"></script>
-<script src="collisions.js"></script>
-<script src="indoorCollisions.js"></script>
-<script src="land.js"></script>
-<script src="door.js"></script>
-<script src="Sprites.js"></script>
+<script src="boundary.js"></script>
+<script src="descriptors.js"></script>
+<script src="layout/collisions.js"></script>
+<script src="layout/indoorCollisions.js"></script>
+<script src="layout/land.js"></script>
+<script src="sprites.js"></script>
+<script src="map/outside.js"></script>
+<script src="map/inside.js"></script>
 <script src="index.js"></script>
-
