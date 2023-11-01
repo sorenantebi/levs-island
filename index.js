@@ -435,11 +435,13 @@ const doorBoundary = new Boundary({
         y: 14 * 48 + offset.out.y 
     }, width: 40, height:40
 })
+const doorImage = new Image()
+doorImage.src = './img/door.png'
 const openingDoor = new Door({
     position: {
         x: 19 * 48 +offset.out.x,
         y: 14 * 48 + offset.out.y 
-    }, image: './img/door.png', frames: {max: 4}, boundary: doorBoundary
+    }, image: doorImage, frames: {max: 4}, boundary: doorBoundary
 })
 const doorToOutside = new Boundary({position: {
     x: 25 * 48 +offset.in.x -10,
@@ -557,25 +559,6 @@ class outsideMap {
                     break
                 }
             } 
-            if (rectangularCollision({
-                rectangle1: player,
-                rectangle2:{...door, position:{
-                    x: door.position.x,
-                    y: door.position.y +2
-                }}
-            })){transitioning = true
-                //player.frames.val = 0
-                gsap.to(('#transitionImage'), {
-                    opacity: 1, duration:1, onComplete: function(){fade()
-                        
-                        characterLocation.location = true
-                        player.image = player.sprites.down
-                        transitioning = false
-                        return
-                        } 
-                })
-                
-            }
 
             if (rectangularCollision({
                 rectangle1: player,
@@ -589,6 +572,27 @@ class outsideMap {
             }else{
                 openingDoor.close = false
             }
+            if (rectangularCollision({
+                rectangle1: player,
+                rectangle2:{...door, position:{
+                    x: door.position.x,
+                    y: door.position.y +2
+                }}
+            })){transitioning = true
+                
+                gsap.to(('#transitionImage'), {
+                    opacity: 1, duration:1, onComplete: function(){fade()
+                       
+                        characterLocation.location = true
+                        player.image = player.sprites.down
+                        transitioning = false
+                        return
+                        } 
+                })
+                
+            }
+
+            
             
             if (rectangularCollision({
                 rectangle1: player,
@@ -622,7 +626,7 @@ class outsideMap {
             }
 
             if (moving) {
-                // Player is moving, reset the flag
+               
                 isTextDisplayed = false;
             }
             if (moving){movables.forEach((movable)=>{
@@ -679,7 +683,7 @@ class outsideMap {
                 }
             }
             if (moving) {
-                // Player is moving, reset the flag
+               
                 isTextDisplayed = false;
             }
             if (moving){movables.forEach((movable)=>{
@@ -733,7 +737,7 @@ class outsideMap {
                 }
             }
             if (moving) {
-                // Player is moving, reset the flag
+               
                 isTextDisplayed = false;
             }
             if (moving){movables.forEach((movable)=>{
@@ -787,7 +791,7 @@ class outsideMap {
                 }
             }
                 if (moving) {
-                    // Player is moving, reset the flag
+                   
                     isTextDisplayed = false;
                 }
             
@@ -807,6 +811,7 @@ class outsideMap {
       }
     }
 }
+
 
 const outside = new outsideMap()
 
@@ -829,6 +834,7 @@ class insideMap {
         insideForeground.draw()  
         let moving  =  true 
         playerInside.moving = false
+        
         if (keys.ArrowUp.pressed && lastKey=='ArrowUp'){
             playerInside.moving = true
             playerInside.image = playerInside.sprites.up
@@ -933,6 +939,7 @@ class insideMap {
                 //player.frames.val = 0
                 gsap.to(('#transitionImage'), {
                     opacity: 1, duration:1, onComplete: function(){fade()
+                        openingDoor.frames.val = openingDoor.frames.max -1
                         characterLocation.location = false
                         playerInside.image = playerInside.sprites.up
                         transitioning = false
@@ -1067,6 +1074,7 @@ class insideMap {
 
     }
 }
+
 const inside = new insideMap()
 function animate(){
     window.requestAnimationFrame(animate)
@@ -1084,10 +1092,7 @@ function animate(){
 
    
 }
-
 animate()
-
-
 
 
 
@@ -1139,105 +1144,4 @@ window.addEventListener('keyup', (e) => {
             break
     }
 
-})
-
-const myDiv = document.querySelector('#overlapping')
-const myOtherDiv = document.querySelector('#skip')
-const imageElement = document.querySelector('#image')
-let songIndex = 0
-const songs = [
-    './audio/LookWhatYouMadeMeDo.mp3',
-    './audio/CruelSummer.mp3',
-    './audio/LoveStory.mp3',
-    './audio/ReadyForIt.mp3',
-    './audio/BlankSpace.mp3',
-    './audio/BadBlood.mp3',
-    './audio/Style.mp3',
-    './audio/AntiHero.mp3',
-    './audio/OutOfTheWoods.mp3',
-    './audio/Karma.mp3',
-    './audio/IKnewYouWereTrouble.mp3',
-    './audio/YouAreInLove.mp3',
-    
-]
-
-let isPlaying = false;
-function playRandomSong() {
-  if (!isPlaying) {
-    isPlaying = true; 
-
-    const randomSongIndex = Math.floor(Math.random() * songs.length);
-    const randomSongURL = songs[randomSongIndex];
-
-    if (audio.Map) {
-      audio.Map.unload(); 
-    }
-
-    audio.Map = new Howl({
-      src: randomSongURL,
-      html5: true,
-      volume: 0.5,
-      onend: function () {
-        isPlaying = false; 
-        playRandomSong(); 
-      },
-    });
-
-    audio.Map.play(); 
-  }
-}
-
-function playNextSong(){
-    
-    if (isPlaying && clicked) {
-        
-        audio.Map.stop()
-    
-        if (songIndex >= songs.length){
-            songIndex = 0
-        }
-        const songURL = songs[songIndex]
-        songIndex += 1
-        if (audio.Map) {
-          audio.Map.unload(); 
-        }
-    
-        audio.Map = new Howl({
-          src: songURL,
-          html5: true,
-          volume: 0.5,
-          onend: function () {
-            isPlaying = false; 
-            playRandomSong(); 
-          },
-        });
-        audio.Map.play()
-        
-      }
-}
-let clicked = false
-let wasPaused = false
-
-myDiv.addEventListener('click', () => {
-    console.log('Div was clicked!');
-    if (!clicked) {
-        imageElement.src = './img/speakerOn.png'
-        clicked = true
-        if (wasPaused){
-            audio.Map.play()
-        } else {playRandomSong()}
-   
-        
-    }
-    else if (clicked){
-        audio.Map.pause()
-        imageElement.src = './img/speakerOff.png'
-        clicked = false
-        wasPaused = true
-    }
-})
-
-myOtherDiv.addEventListener('click', () => {
-    console.log('Div was clicked!');
-    playNextSong()
 })

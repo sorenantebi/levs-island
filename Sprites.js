@@ -153,7 +153,7 @@ class Pokemon extends Sprite{
 
    
 }
-
+/* 
 class Door extends Sprite{
     constructor({position, image, frames = {max: 1}, boundary}){
         super({position:position,image:image,frames:frames})
@@ -207,4 +207,4 @@ class Door extends Sprite{
     }
 
     
-}
+} */
