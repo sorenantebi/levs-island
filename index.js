@@ -61,8 +61,8 @@ const offset = {
 offset.in.x = offset.out.x-250
 offset.in.y = offset.out.y -520
 ////////////////////////////
-const waves = new Image()
-waves.src = './img/tile.png'
+//const waves = new Image()
+//waves.src = './img/tile.png'
 const oceans = []
 oceanMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
@@ -70,7 +70,7 @@ oceanMap.forEach((row, i) => {
             oceans.push(new oceanTile({position:{
                 x: j * 48 + offset.out.x,
                 y: i * 48 + offset.out.y
-            }, image: waves, frames: {max:14}}))
+            }, image: './img/tile.png', frames: {max:14}}))
         }
     })})
 
@@ -184,13 +184,7 @@ collisionsMapInside.forEach((row, i) => {
             }, width: 44, height: 40}))}
         })})
 //////////////////
-/* class NPC {
-    constructor({position, sprite}){
-       
-        this.position = position
-        this.sprite = sprite
-    }
-}          */  
+
 class puzzlePiece extends descriptiveObject{
     constructor({position, width, height, text, name = '', next, start}){
         super(position = position, width=width,height=height,text=text, name=name)
@@ -198,14 +192,7 @@ class puzzlePiece extends descriptiveObject{
         this.start = start
     }
 }
-const img = new Image()
-img.src = './img/pokemon.png'
-
-const foreGround = new Image()
-foreGround.src = './img/foreground.png'
-
-const azu = new Image()
-azu.src = './img/azuDown.png'
+///////// poke sprites
 const pokeDown = new Image()
 pokeDown.src = './img/azuDown.png'
 const pokeUp = new Image()
@@ -215,15 +202,13 @@ pokeLeft.src = './img/azuLeft.png'
 const pokeRight = new Image()
 pokeRight.src = './img/azuRight.png'
 
+//////// player sprites
 const playerDown = new Image()
 playerDown.src = './img/lev.png'
-
 const playerRight = new Image()
 playerRight.src = './img/right.png'
-
 const playerLeft = new Image()
 playerLeft.src = './img/left.png'
-
 const playerUp = new Image()
 playerUp.src = './img/up.png'
 
@@ -232,7 +217,7 @@ const player = new Sprite ({
         x: canvas.width / 2 - 140 /4,
         y: canvas.height/2 - 53/4 - 100
     },
-    image: playerDown,
+    image: './img/lev.png',
     frames: {
         max: 4
     },
@@ -250,7 +235,7 @@ const playerInside = new Sprite ({
         x: canvas.width / 2 - 140 /4,
         y: canvas.height/2 - 53/4 +5    
     },
-    image: playerUp,
+    image: './img/up.png',
     frames: {
         max: 4
     },
@@ -268,7 +253,7 @@ const poke = new Pokemon({
         x: 450,
         y: 700
     },
-    image: azu, frames: {max:2},
+    image: './img/azuDown.png', frames: {max:2},
     sprites: {
         up: pokeUp,
         down: pokeDown,
@@ -277,36 +262,35 @@ const poke = new Pokemon({
     } 
 })
 
+
+/////// backgrounds and foregrounds
+// outside 
 const background = new Sprite({position:{
     x:offset.out.x,
     y:offset.out.y
-}, image: img})
+}, image: './img/pokemon.png'})
 
 const foreground = new Sprite({position:{
     x:offset.out.x,
     y:offset.out.y 
-}, image: foreGround})
+}, image: './img/foreground.png'})
 
-const insideImage = new Image()
+// inside 
 
-
-insideImage.src = './img/inside.png'
-
-const doorImage = new Image()
-doorImage.src = './img/door.png'
 const insideBackground = new Sprite ({position:{
     x:offset.in.x-10,
     y:offset.in.y  
-}, image: insideImage}) 
+}, image: './img/inside.png'}) 
 
-const insideForeGround = new Image()
-insideForeGround.src = './img/foregroundInside.png'
 const insideForeground = new Sprite({
     position: {x:offset.in.x-10,
     y:offset.in.y  
-}, image: insideForeGround})
+}, image: './img/foregroundInside.png'})
 
-const testBoundary = new descriptiveObject({position: {
+
+////////////
+// outside objects
+const islandName = new descriptiveObject({position: {
     x: 17 * 48 +offset.out.x  +40,
     y: 20 * 48 + offset.out.y 
 }, width: 1, height: 40, text: "Lev's Island"})
@@ -316,6 +300,13 @@ const sign = new descriptiveObject({position: {
     y: 17 * 48 + offset.out.y -45
 }, width: 40, height: 2, text: "The Field of Flowers <br>\u2740 \u273F"})
 
+const mailbox = new descriptiveObject({position: {
+    x: 20 * 48 +offset.out.x + 10,
+    y: 15 * 48 + offset.out.y 
+}, width: 30, height: 2, text: "S + L <br>\u2665"})
+
+/////////
+// inside objects
 const fireplace = new descriptiveObject({position: {
     x: 32 * 48 +offset.in.x,
     y: 14 * 48 + offset.in.y 
@@ -325,6 +316,7 @@ const tv = new descriptiveObject({position: {
     x: 33 * 48 +offset.in.x + 20,
     y: 22 * 48 + offset.in.y +2
 }, width: 35, height: 1, text: "* click * <br> ... One Piece is playing! ...", speechBubble:true})
+
 const cooking = new descriptiveObject({position: {
     x: 17 * 48 +offset.in.x,
     y: 15 * 48 + offset.in.y
@@ -339,14 +331,12 @@ const phone = new descriptiveObject({position: {
     x: 24 * 48 +offset.in.x -3,
     y: 16 * 48 + offset.in.y +5
 }, width: 20, height: 1, text: "Levypvy's LP grind never stops! <br> Currently: 1925 elo", speechBubble:true})
-const mailbox = new descriptiveObject({position: {
-    x: 20 * 48 +offset.out.x + 10,
-    y: 15 * 48 + offset.out.y 
-}, width: 30, height: 2, text: "S + L <br>\u2665"})
+
 const bed = new descriptiveObject({position: {
     x: 21 * 48 +offset.in.x +20,
     y: 25 * 48 + offset.in.y +20
 }, width: 40, height: 60, name:'bed', speechBubble: true, text: "I'm...so eepy..."})
+
 const notebook = new notebookObject({position: {
     x: 25 * 48 +offset.in.x,
     y: 21 * 48 + offset.in.y +4
@@ -357,6 +347,8 @@ const book = new bookObject({position: {
     y: 19 * 48 + offset.in.y +38
 }, width: 30, height: 2, text: "Dear Levia, <br> you're the best. <br> I'll always be missing you <br> ~ soren \u2665"})
 
+
+// pictures 
 const picture1 = new descriptiveObjectInside({
         position: {
             x: 26 * 48 +offset.in.x -3,
@@ -396,6 +388,7 @@ const picture5 = new descriptiveObjectInside({
     }, width: 80, height: 40, source: './img/art5.png', horizontal: true
  
 })
+
 const picture6 = new descriptiveObjectInside({
     position: {
         x: 21 * 48 +offset.in.x -3,
@@ -403,10 +396,12 @@ const picture6 = new descriptiveObjectInside({
     }, width: 80, height: 1, source: './img/art6.png', horizontal: true
  
 })
+
 const bookshelf1 = new descriptiveObject({position: {
     x: 17 * 48 +offset.in.x,
     y: 20 * 48 + offset.in.y 
 }, width: 80, height: 2, text:"Textbooks on how to \n cope with being \n extremely attractive" })
+
 const bookshelf2 = new descriptiveObject({position: {
     x: 13 * 48 +offset.in.x -3,
     y: 20 * 48 + offset.in.y 
@@ -427,7 +422,7 @@ const keys = {
     }
 }
 
-
+// doors 
 const door = new Boundary({position: {
     x: 19 * 48 +offset.out.x,
     y: 13 * 48 + offset.out.y 
@@ -444,16 +439,19 @@ const openingDoor = new Door({
     position: {
         x: 19 * 48 +offset.out.x,
         y: 14 * 48 + offset.out.y 
-    }, image: doorImage, frames: {max: 4}, boundary: doorBoundary
+    }, image: './img/door.png', frames: {max: 4}, boundary: doorBoundary
 })
 const doorToOutside = new Boundary({position: {
     x: 25 * 48 +offset.in.x -10,
     y: 27 * 48 + offset.in.y -40
     
 }, width: 40, height: 40})
-const objects = [testBoundary, sign, mailbox]
+
+
+const objects = [islandName, sign, mailbox]
 const insideObjects = [picture1, picture2, picture3, picture4, picture5, picture6, bookshelf1, bookshelf2, fireplace, tv, ramen,phone, notebook, cooking, book, bed]
 const movables = [background, ...boundaries, foreground, poke, ...oceans, insideBackground, ...indoorBoundaries, door, doorToOutside, openingDoor,...objects, doorBoundary, insideForeground, ...insideObjects]
+
 function rectangularCollision ({rectangle1, rectangle2}){
     return (
         rectangle1.position.x + rectangle1.width >= rectangle2.position.x && 
@@ -463,10 +461,8 @@ function rectangularCollision ({rectangle1, rectangle2}){
     )
 
 }
-const characterLocation = {
-    location: false
-}
-let transitioning = false
+
+
 function fade(){
     gsap.to('#transitionImage', {
         opacity: 0, duration:2, onComplete: function() {
@@ -478,7 +474,14 @@ function fade(){
     }}) 
     
 }
+
+const characterLocation = {
+    location: false
+}
+let transitioning = false
 let isTextDisplayed = false;
+
+
 class outsideMap {
     draw(){
         if (transitioning){
@@ -499,12 +502,7 @@ class outsideMap {
         }) 
         door.draw()
         openingDoor.draw()
-        
-
         player.draw()
-        
-       
-       
         foreground.draw()
         poke.draw() 
         poke.update()

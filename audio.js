@@ -1,5 +1,4 @@
 
-
 const audio = {
     Map: new Howl({
         src: './audio/BlankSpace.mp3',

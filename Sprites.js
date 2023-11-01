@@ -1,7 +1,8 @@
 class Sprite {
     constructor({position, image, frames = {max: 1}, sprites}){
         this.position = position
-        this.image = image
+        this.image = new Image()
+        this.image.src = image
         this.frames = {...frames, val: 0, elapsed: 0}
 
         this.image.onload = () =>{
@@ -13,8 +14,7 @@ class Sprite {
        
     }
 
-    draw(){
-       
+    loadImage(){
         c.drawImage(this.image,
             this.frames.val * this.width,
             0,
@@ -24,6 +24,10 @@ class Sprite {
             this.position.y,
             this.image.width / this.frames.max,
             this.image.height)
+    }
+    draw(){
+        this.loadImage()
+        
         if (!this.moving) {
             this.frames.val = 0
             return}
@@ -40,13 +44,37 @@ class Sprite {
    
 }
 
+class oceanTile extends Sprite {
+    constructor({ position, image, frames = { max: 1 } }) {
+        super({position:position, image:image, frames:frames})
+
+    }
+    draw() {
+        c.drawImage(this.image,
+            this.frames.val * (this.image.width / this.frames.max),
+            0,
+            this.image.width / this.frames.max,
+            this.image.height,
+            this.position.x ,
+            this.position.y ,
+            this.image.width / this.frames.max + 2,
+            this.image.height );
+
+        if (this.frames.max > 1) {
+            this.frames.elapsed++;
+        }
+        if (this.frames.elapsed % 10 == 0) {
+            if (this.frames.val < this.frames.max - 1) this.frames.val++;
+            else this.frames.val = 0;
+        }
+    }
+}
+
+
 
 class Pokemon extends Sprite{
     constructor({image, position, frames = {max: 1}, sprites}){
         super({position:position, image:image, frames:frames, sprites:sprites})
-        
-        this.width = this.image.width*0.7
-        this.height = this.image.height*0.7
         this.next = 'right'
         this.moving = true
        
@@ -109,15 +137,7 @@ class Pokemon extends Sprite{
         
     
     draw(){
-       c.drawImage(this.image,
-        this.frames.val * this.width,
-        0,
-        this.image.width/ this.frames.max,
-        this.image.height,
-        this.position.x,
-        this.position.y,
-        this.image.width / this.frames.max,
-        this.image.height)
+       super.loadImage()
     }
 
     sound(){
@@ -146,15 +166,7 @@ class Door extends Sprite{
 
     draw(){
        
-        c.drawImage(this.image,
-            this.frames.val * this.width,
-            0,
-            this.image.width/ this.frames.max,
-            this.image.height,
-            this.position.x,
-            this.position.y,
-            this.image.width / this.frames.max,
-            this.image.height)
+        super.loadImage()
 
         this.boundary.draw()
 
